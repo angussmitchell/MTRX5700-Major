@@ -2,7 +2,7 @@
 
 ## Dancing Drone
 
-###Equipment we need:
+### Equipment we need:
 
 - either one big drone or two small ones
 
