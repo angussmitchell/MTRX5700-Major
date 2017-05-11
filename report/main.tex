@@ -1,0 +1,76 @@
+\documentclass[]{article}
+\usepackage{amsmath, mathrsfs, tikz, caption, amssymb, fancyhdr, 	epstopdf, geometry, hyperref, float, siunitx}
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage[sort,nocompress]{cite}
+\usepackage{matlab-prettifier}
+
+
+\hypersetup{
+	colorlinks = true,
+	linkcolor = {blue},
+	linkbordercolor = {white}
+}
+
+\geometry{a4paper, portrait, margin=1in}
+
+\numberwithin{equation}{subsection}
+\numberwithin{figure}{subsection}
+\captionsetup{labelfont=bf}
+\graphicspath{ {figures/} }
+
+\usepackage{listings}
+\lstset{
+    	language=Matlab,                		% choose the language of the code
+    %	basicstyle=10pt,       				% the size of the fonts that are used for the code
+    	numbers=left,                  			% where to put the line-numbers
+    	numberstyle=\footnotesize,      		% the size of the fonts that are used for the line-numbers
+    	stepnumber=1,                   			% the step between two line-numbers. If it's 1 each line will be numbered
+    	numbersep=5pt,                  		% how far the line-numbers are from the code
+    %	backgroundcolor=\color{white},  	% choose the background color. You must add \usepackage{color}
+    	showspaces=false,               		% show spaces adding particular underscores
+    	showstringspaces=false,         		% underline spaces within strings
+    	showtabs=false,                 			% show tabs within strings adding particular underscores
+    %	frame=single,	                			% adds a frame around the code
+    %	tabsize=2,                				% sets default tabsize to 2 spaces
+    %	captionpos=b,                   			% sets the caption-position to bottom
+    	breaklines=true,                			% sets automatic line breaking
+    	breakatwhitespace=false,        		% sets if automatic breaks should only happen at whitespace
+    	escapeinside={\%*}{*)}          		% if you want to add a comment within your code
+    }
+
+\renewcommand{\thesubsection}{\thesection.\alph{subsection}}
+\newcommand{\lapL}[1]{\mathscr{L}\{#1\}}
+\setlength{\parindent}{0pt}
+
+\pagestyle{fancy}
+\fancyhf{}
+\setlength{\headheight}{25pt}
+\lhead{MTRX5700 Major Project}
+\rhead{Neill Foweraker 430225437\\Angus Mitchell 440246554\\Xue Yin Zhang 440305585}
+\rfoot{Page \thepage}
+
+%opening
+\title{MTRX5700 Experimental Robotics\\Major Project}
+\author{Neill Foweraker 430225437\\Angus Mitchell 440246554\\Xue Yin Zhang 440305585}
+
+\begin{document}
+
+\maketitle
+
+\tableofcontents
+\listoffigures
+\newpage
+
+
+\input{question1.tex}
+\newpage
+\input{question2.tex}
+\newpage
+\input{question3.tex}
+
+\bibliographystyle{plain}
+\bibliography{biblio}
+
+\end{document}
