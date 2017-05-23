@@ -73,20 +73,22 @@
 
 - lift off at power up, return to same location at power down
 
-## Things to get working by the end of this week (20/05/17)
+## Week 10 (20/05/17)
 
-- get the drone to take off and land - must be controlled by laptop/rpi/keyboard/game controller/joystick and not from phone app
+- get the drone to take off and land - must be controlled by laptop/rpi/keyboard/game controller/joystick and not from phone app --- ROLLED OVER
 
-- upload a test program to run on the drone as embedded software
+- upload a test program to run on the drone as embedded software --- DONE
 
-- receive data from the sensors
+- receive data from the sensors --- DON'T NEED ANYMORE
 
-- be able to detect the beat in various genres of music
+- be able to detect the beat in various genres of music --- ROLLED OVER
 
-## If wer're really feeling ambitious:
+## Week 11 (27/05/17)
+
+- get the drone to take off and land by writing embedded software
 
 - be able to detect bars in music
 
-- be able to detect sparse/non-rhythmic sections in music
+- be able to characterise sections in music
 
 - execute a simple dance move
