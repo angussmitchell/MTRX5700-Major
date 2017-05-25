@@ -1,36 +1,56 @@
 import pyaudio
 import wave
- 
-FORMAT = pyaudio.paInt16
-CHANNELS = 1
-RATE = 44100
-CHUNK = 1024
-RECORD_SECONDS = 5
-WAVE_OUTPUT_FILENAME = "file.wav"
- 
+
+#####################################################
+#       FUNCTION DEFINITIONS                        #
+#####################################################
+
+# grab a chunk function
+def get_chunk(record_s = 5,rate = 44100,chunk = 1024):
+    frames = []
+
+    for i in range(0, int(rate / chunk * record_s)):
+        data = stream.read(chunk)
+        frames.append(data)  # frames contains all the data
+
+    return frames
+
+def save_capture(frames, rate = 44100, output_filename = "file.wav",channels = 1):
+    ##record song
+    format = pyaudio.paInt16
+    waveFile = wave.open(output_filename, 'wb')
+    waveFile.setnchannels(channels)
+    waveFile.setsampwidth(audio.get_sample_size(format))
+    waveFile.setframerate(rate)
+    waveFile.writeframes(b''.join(frames))
+    waveFile.close()
+
+
+#####################################################
+#       MAIN CODE                                   #
+#####################################################
+
+
+channels = 1
+rate = 44100
+chunk = 1024
+record_s = 5
+format = pyaudio.paInt16
 audio = pyaudio.PyAudio()
- 
-# start Recording
-stream = audio.open(format=FORMAT, channels=CHANNELS,
-                rate=RATE, input=True,
-                frames_per_buffer=CHUNK)
+
+## start Recording
+stream = audio.open(format=format, channels=channels,
+                rate=rate, input=True,
+                frames_per_buffer=chunk)
 print "recording..."
-frames = []
- 
-for i in range(0, int(RATE / CHUNK * RECORD_SECONDS)):
-    data = stream.read(CHUNK)
-    frames.append(data)
-print "finished recording"
- 
- 
+
+frames = get_chunk()
+
 # stop Recording
 stream.stop_stream()
 stream.close()
 audio.terminate()
- 
-waveFile = wave.open(WAVE_OUTPUT_FILENAME, 'wb')
-waveFile.setnchannels(CHANNELS)
-waveFile.setsampwidth(audio.get_sample_size(FORMAT))
-waveFile.setframerate(RATE)
-waveFile.writeframes(b''.join(frames))
-waveFile.close()
+print "finished recording"
+
+save_capture(frames = frames)
+
