@@ -76,7 +76,6 @@ mono_data = (raw_data[:,0] + raw_data[:,1]) /3
 
 #put the buzz in the song
 buzzed_data = mono_data + sin_mask
-
 wavfile.write('processed.wav',44100,buzzed_data)
 
 
