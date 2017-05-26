@@ -3,9 +3,12 @@ import aubio
 import matplotlib.pyplot as plt
 import scipy.io.wavfile as wavfile
 import numpy as np
+import ps_drone
 
-#close all figs
-plt.close("all")
+#initialise
+drone = ps_drone.Drone()       # Initializes the PS-Drone-API
+drone.startup()                # Connects to the drone and starts subprocesses
+
 
 win_s = 512                 # fft size
 hop_s = win_s // 2          # hop size
@@ -66,6 +69,7 @@ for x in range(0,len(beats)-2):
     pos_max = beats[x] + buzz_len
     mask[pos_min:pos_max] = np.ones(buzz_len)
 
+beats = np.asarray(beats)
 ## create sin mask
 sin_mask = mask * y
 sin_mask = sin_mask.astype(np.int16)
@@ -80,7 +84,6 @@ mono_data = (raw_data[:,0] + raw_data[:,1]) /3
 buzzed_data = mono_data + sin_mask
 wavfile.write('processed.wav',44100,buzzed_data)
 
-
 #find overall BPM
 BPM_list = [j-i for i, j in zip(beats[:-1], beats[1:])]    #find differentes between each element using zip
 T_samples = np.average(BPM_list)                            #average out differences
@@ -94,4 +97,24 @@ plt.ylabel('amplitude')
 plt.xlabel('sample No.')
 plt.title('raw .WAV data BPM = %d' % BPM)
 plt.show()
+
+# convert beat array to time array
+beat_times = beats/float(samplerate)
+#get dt array
+dt = [j-i for i, j in zip(beat_times[:-1], beat_times[1:])]
+
+drone.takeoff()                # Drone starts
+time.sleep(7.5)                # Gives the drone time to start
+
+
+for i in range(1,20):
+    drone.turnLeft()
+    time.sleep(beat_times(i))
+    drone.turnRight()
+
+
+
+
+drone.land()                   # Drone lands
+
 

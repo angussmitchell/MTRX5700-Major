@@ -19,6 +19,13 @@ drone.startup()                # Connects to the drone and starts subprocesses
 drone.takeoff()                # Drone starts
 time.sleep(7.5)                # Gives the drone time to start
 
+
+drone.doggyWag()
+drone.doggyHop()
+drone.doggyNod()
+
+
+#time.sleep()                # Gives the drone time to start
 #drone.moveForward()            # Drone flies forward...
 #time.sleep(2)                  # ... for two seconds
 #drone.stop()                   # Drone stops...
@@ -38,3 +45,4 @@ time.sleep(7.5)                # Gives the drone time to start
 #time.sleep(2)
 
 drone.land()                   # Drone lands
+

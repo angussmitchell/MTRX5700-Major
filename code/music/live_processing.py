@@ -67,12 +67,12 @@ audio = pyaudio.PyAudio()
 stream = audio.open(format=format, channels=channels,
                 rate=rate, input=True,
                 frames_per_buffer=chunk)
+
 print "recording..."
 
 while(1):
     frames = get_chunk()
-    if get_beats(frames.reshape(256)):
-        print("beat detected")
+    print(get_beats(frames.reshape(256)))
 
 
 # stop Recording

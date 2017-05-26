@@ -718,9 +718,9 @@ class Drone(object):
 		ospeed = self.__speed
 		self.__speed = 1
 		for i in range (0,4,1):
-			self.moveUp(1)
+			self.moveUp()
 			time.sleep(0.20)
-			self.moveDown(1)
+			self.moveDown()
 			time.sleep(0.20)
 		self.hover()
 		self.__speed = ospeed
@@ -730,10 +730,10 @@ class Drone(object):
 		ospeed = self.__speed
 		self.__speed = 1
 		for i in range (0,4,1):
-			self.moveLeft(1)
-			time.sleep(0.4)
-			self.moveRight(1)
-			time.sleep(0.4)
+			self.moveLeft()
+			time.sleep(0.25)
+			self.moveRight()
+			time.sleep(0.25)
 		self.hover()
 		self.__speed = ospeed
 
@@ -742,9 +742,9 @@ class Drone(object):
 		ospeed = self.__speed
 		self.__speed = 1
 		for i in range (0,4,1):
-			self.moveForward(1)
+			self.moveForward()
 			time.sleep(0.25)
-			self.moveBackward(1)
+			self.moveBackward()
 			time.sleep(0.25)
 		self.hover()
 		self.__speed = ospeed
