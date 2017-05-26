@@ -31,6 +31,7 @@
 *.iml
 *.pdf
 *.wav
+*.pyc
 !Assignment_4_Major_Project.pdf
 !userManual.pdf
 !PS-Drone-Documentation.pdf
