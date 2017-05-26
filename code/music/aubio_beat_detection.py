@@ -10,7 +10,7 @@ plt.close("all")
 win_s = 512                 # fft size
 hop_s = win_s // 2          # hop size
 
-filename = 'nothing.wav'
+filename = 'file.wav'
 
 samplerate = 0
 
@@ -18,7 +18,9 @@ s = aubio.source(filename, samplerate, hop_s)
 samplerate = s.samplerate
 o = aubio.tempo("default", win_s, hop_s, samplerate)
 
-# tempo detection delay, in samples
+##plot
+
+# tempo detection delay, in samdoples
 # default to 4 blocks delay to catch up with
 delay = 4. * hop_s
 
