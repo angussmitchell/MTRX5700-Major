@@ -12,17 +12,50 @@
 
 import time
 import ps_drone                # Imports the PS-Drone-API
+import sys
 
 drone = ps_drone.Drone()       # Initializes the PS-Drone-API
 drone.startup()                # Connects to the drone and starts subprocesses
+drone.reset()
 
-drone.takeoff()                # Drone starts
+#Sets drones LEDs to green when red
+while (drone.getBattery()[0]==-1): time.sleep(0.1) #Reset completed ?
+print "battery:" + str(drone.getBattery()[0]) + "% " + str(drone.getBattery()[1])
+if drone.getBattery()[1]=="empty": sys.exit()
+
+drone.useDemoMode(True)
+drone.getNDpackage(["demo"])
+time.sleep(0.5)
+
+drone.trim()
+drone.getSelfRotation(5)
+
+
+#15 basic datasets per second (default)
+#Packets, which shall be decoded
+#Give it some time to fully awake
+drone.takeoff()
+
 time.sleep(7.5)                # Gives the drone time to start
 
+# start = time.time()
+# for i in range(20):
+#     drone.moveUp(1)
+#     time.sleep(0.3)
+#     drone.moveDown(1)
+#     time.sleep(0.3)
+# stop = time.time()
 
-drone.doggyWag()
-drone.doggyHop()
-drone.doggyNod()
+start = time.time()
+drone.moveUp(1)
+time.sleep(0.3)
+stop = time.time()
+
+dt = stop - start
+
+print "time = " + str(dt)
+#drone.doggyHop()
+#drone.doggyNod()
 
 
 #time.sleep()                # Gives the drone time to start

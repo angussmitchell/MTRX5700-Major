@@ -107,10 +107,11 @@ drone.takeoff()                # Drone starts
 time.sleep(7.5)                # Gives the drone time to start
 
 
-for i in range(1,20):
-    drone.turnLeft()
+for i in range(1,20,2):
+    drone.turnLeft(1)
     time.sleep(beat_times(i))
-    drone.turnRight()
+    drone.turnRight(1)
+    time.sleep(beat_times(i+2))
 
 
 
