@@ -3,6 +3,7 @@ import sounddevice as sd
 import wave
 import aubio
 import numpy as np
+import matplotlib.pyplot as plt
 
 #####################################################
 #       FUNCTION DEFINITIONS                        #
@@ -19,8 +20,8 @@ import numpy as np
 #
 #    return frames
 
-def get_chunk(rate = 44100,chunk = 256):
-    frames = sd.rec(chunk, samplerate=rate, channels=1)
+def get_chunk(rate = 44100,frame_size = 256):
+    frames = sd.rec(frame_size, samplerate=rate, channels=1)
     return frames
 
 
@@ -40,12 +41,11 @@ def get_beats(samples, samplerate = 44100):
     win_s = 512  # fft size
     hop_s = win_s // 2  # hop size
     o = aubio.tempo("default", win_s, hop_s, samplerate)
-    total_frames = 0
+    samples = samples * 600
     is_beat = o(samples)
     if is_beat:
         return 1
     return 0
-
 
 #####################################################
 #       MAIN CODE                                   #
@@ -54,14 +54,13 @@ def get_beats(samples, samplerate = 44100):
 
 channels = 1
 rate = 44100
-chunk = 1024
+chunk = 256
+frame_size = chunk
 record_s = 5
 win_s = 512                 # fft size
 hop_s = win_s // 2          # hop size
 format = pyaudio.paInt16
 audio = pyaudio.PyAudio()
-
-
 
 ## start Recording
 stream = audio.open(format=format, channels=channels,
@@ -70,10 +69,15 @@ stream = audio.open(format=format, channels=channels,
 
 print "recording..."
 
-while(1):
-    frames = get_chunk()
-    print(get_beats(frames.reshape(256)))
+#plt.ion()
 
+while(1):
+
+    frames = get_chunk(frame_size = frame_size)
+    #plt.ylim([-100,48000])
+    #plt.plot(frames)
+    #plt.pause(0.05)
+    print(get_beats(frames.reshape(len(frames))))
 
 # stop Recording
 stream.stop_stream()
