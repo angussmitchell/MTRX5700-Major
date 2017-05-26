@@ -35,53 +35,59 @@ drone.getSelfRotation(5)
 #Packets, which shall be decoded
 #Give it some time to fully awake
 drone.takeoff()
-
 time.sleep(7.5)                # Gives the drone time to start
+drone.mtrim()
+drone.setSpeed(0.7)
 
-# start = time.time()
-# for i in range(20):
-#     drone.moveUp(1)
-#     time.sleep(0.3)
+
+
+
+# for i in range(1,4):
+#     drone.moveUp(.55)
+#     time.sleep(0.5)
 #     drone.moveDown(1)
-#     time.sleep(0.3)
+#     time.sleep(0.5)
+
+
+start = time.time()
+for i in range(1,4):
+    drone.relMove(0,0,0.6,0)
+    time.sleep(0.5)
+    drone.relMove(0, 0, -1, 0)
+    time.sleep(0.5)
+stop = time.time()
+
+dt = stop - start
+
+# print "move up time = " + str(dt)
+#
+# start = time.time()
+# drone.moveDown(0.5)
+# time.sleep(1)
 # stop = time.time()
-
-start = time.time()
-drone.moveUp(0.5)
-time.sleep(1)
-stop = time.time()
-
-dt = stop - start
-
-print "move up time = " + str(dt)
-
-start = time.time()
-drone.moveDown(0.5)
-time.sleep(1)
-stop = time.time()
-
-dt = stop - start
-
-print "move down time = " + str(dt)
-
-start = time.time()
-drone.moveUp(0.5)
-time.sleep(1)
-stop = time.time()
-
-dt = stop - start
-
-print "move up time = " + str(dt)
-
-start = time.time()
-drone.moveDown(0.5)
-time.sleep(1)
-stop = time.time()
-
-dt = stop - start
-
-print "move down time = " + str(dt)
-
+#
+# dt = stop - start
+#
+# print "move down time = " + str(dt)
+#
+# start = time.time()
+# drone.moveUp(0.5)
+# time.sleep(1)
+# stop = time.time()
+#
+# dt = stop - start
+#
+# print "move up time = " + str(dt)
+#
+# start = time.time()
+# drone.moveDown(0.5)
+# time.sleep(1)
+# stop = time.time()
+#
+# dt = stop - start
+#
+# print "move down time = " + str(dt)
+#
 
 #drone.doggyHop()
 #drone.doggyNod()

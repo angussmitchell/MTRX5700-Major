@@ -14,6 +14,5 @@ for i in range(0, 10):
     dancer.beat()
     time.sleep(1)
 
-
 print('landing drone...')
 dancer.chill()
