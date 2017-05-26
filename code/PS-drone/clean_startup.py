@@ -9,7 +9,6 @@
 #   Artistic License 2.0 as seen on http://opensource.org/licenses/artistic-license-2.0 (retrieved December 2014)
 #   Visit www.playsheep.de/drone or see the PS-Drone-API-documentation for an abstract from the Artistic License 2.0.
 ###########
-
 import time
 import ps_drone                # Imports the PS-Drone-API
 import sys
@@ -47,42 +46,13 @@ time.sleep(7.5)                # Gives the drone time to start
 # stop = time.time()
 
 start = time.time()
-drone.moveUp(0.5)
-time.sleep(1)
+drone.moveUp(1)
+time.sleep(0.3)
 stop = time.time()
 
 dt = stop - start
 
-print "move up time = " + str(dt)
-
-start = time.time()
-drone.moveDown(0.5)
-time.sleep(1)
-stop = time.time()
-
-dt = stop - start
-
-print "move down time = " + str(dt)
-
-start = time.time()
-drone.moveUp(0.5)
-time.sleep(1)
-stop = time.time()
-
-dt = stop - start
-
-print "move up time = " + str(dt)
-
-start = time.time()
-drone.moveDown(0.5)
-time.sleep(1)
-stop = time.time()
-
-dt = stop - start
-
-print "move down time = " + str(dt)
-
-
+print "time = " + str(dt)
 #drone.doggyHop()
 #drone.doggyNod()
 
@@ -96,7 +66,7 @@ print "move down time = " + str(dt)
 #drone.moveBackward(0.25)       # Drone flies backward with a quarter speed...
 #time.sleep(1.5)                # ... for one and a half seconds
 #drone.stop()                   # Drone stops
-#time.sleep(2)	
+#time.sleep(2)
 #
 #drone.setSpeed(1.0)            # Sets default moving speed to 1.0 (=100%)
 #print drone.setSpeed()         # Shows the default moving speed
