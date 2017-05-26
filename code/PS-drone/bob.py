@@ -5,6 +5,8 @@ import scipy.io.wavfile as wavfile
 import numpy as np
 import ps_drone
 
+
+
 #initialise
 drone = ps_drone.Drone()       # Initializes the PS-Drone-API
 drone.startup()                # Connects to the drone and starts subprocesses
@@ -98,10 +100,13 @@ plt.xlabel('sample No.')
 plt.title('raw .WAV data BPM = %d' % BPM)
 plt.show()
 
+
+
 # convert beat array to time array
 beat_times = beats/float(samplerate)
 #get dt array
 dt = [j-i for i, j in zip(beat_times[:-1], beat_times[1:])]
+
 
 drone.takeoff()                # Drone starts
 time.sleep(7.5)                # Gives the drone time to start
