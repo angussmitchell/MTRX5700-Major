@@ -12,7 +12,6 @@ import matplotlib.pyplot as plt
 # grab a chunk function
 #def get_chunk(record_s = 5,rate = 44100,chunk = 1024):
 #    frames = []#
-#
 #    #for i in range(0, int(rate / chunk * record_s)):
 #    for i in range(0,265):
 #        data = stream.read(chunk)

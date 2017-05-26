@@ -47,13 +47,42 @@ time.sleep(7.5)                # Gives the drone time to start
 # stop = time.time()
 
 start = time.time()
-drone.moveUp(1)
-time.sleep(0.3)
+drone.moveUp(0.5)
+time.sleep(1)
 stop = time.time()
 
 dt = stop - start
 
-print "time = " + str(dt)
+print "move up time = " + str(dt)
+
+start = time.time()
+drone.moveDown(0.5)
+time.sleep(1)
+stop = time.time()
+
+dt = stop - start
+
+print "move down time = " + str(dt)
+
+start = time.time()
+drone.moveUp(0.5)
+time.sleep(1)
+stop = time.time()
+
+dt = stop - start
+
+print "move up time = " + str(dt)
+
+start = time.time()
+drone.moveDown(0.5)
+time.sleep(1)
+stop = time.time()
+
+dt = stop - start
+
+print "move down time = " + str(dt)
+
+
 #drone.doggyHop()
 #drone.doggyNod()
 
