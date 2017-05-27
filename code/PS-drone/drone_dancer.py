@@ -1,4 +1,5 @@
 import ps_drone
+import time
 
 class drone_dancer:
     # time between beats in seconds
@@ -17,10 +18,11 @@ class drone_dancer:
     movement_pre_offset_s = 0.0
 
     # drone move speed
-    drone_move_speed = 0.25
+    drone_move_speed_up = 0.5
+    drone_move_speed_down = 1
 
     # drone connection
-    # drone = ps_drone.Drone()
+    drone = ps_drone.Drone()
 
     # todo wiggle, circle, flip
     class dance_moves:
@@ -45,7 +47,27 @@ class drone_dancer:
     # todo enum for every possible move, set move and have function for main loop that takes current offset in sec
 
     def __init__(self): #, bpm = 60.0):
-        self.drone = ps_drone.Drone()
+        print "battery level: " + str(self.drone.getBattery())
+        self.drone.startup()
+        self.drone.reset()
+        self.drone.takeoff()
+        #
+        time.sleep(10)
+
+        #
+        # self.drone.mtrim()
+
+        self.drone.moveUp(1)
+        time.sleep(1)
+        self.drone.hover()
+
+        time.sleep(2)
+
+
+        self.drone.anim(19, 5)
+
+        # self.drone.pwm(1, 1, 1, 1)
+
         # self.bpm = 60.0
         print('initialized drone dancer')
 
@@ -88,11 +110,13 @@ class drone_dancer:
             self.drone.hover()
         elif self.bob_state_current == self.bob_motion.MOTION_UP:
             print('bob motion up')
-            self.drone.moveUp(0.25)#self.drone_move_speed)
+            self.drone.moveUp(self.drone_move_speed_up)
             self.bob_state_current = self.bob_motion.MOTION_DOWN
         elif self.bob_state_current == self.bob_motion.MOTION_DOWN:
             print('bob motion down')
-            self.drone.moveDown(0.25)#self.drone_move_speed)
+            # self.drone.moveDown(self.drone_move_speed_down)
+            # self.drone.thrust(0, 0, 0, 0)
+            self.drone.at("PWM", [1, 1, 1, 1])
             self.bob_state_current = self.bob_motion.MOTION_UP
 
 
