@@ -13,6 +13,7 @@ import sys
 import aubio
 import ps_drone         # PS-drone API
 import drone_presets    # import drone functions that we wrote
+from recorded_music import get_beats  #import music processing functions
 
 ## implement later when we have live music working
 #live = False
@@ -25,7 +26,7 @@ import recorded_music
 ## do music processing first
 
 # beat detection variables
-filename = 'Angels  Airwaves - It Hurts (Audio Video).wav'
+filename = 'music/Angels  Airwaves - It Hurts (Audio Video).wav'
 win_s = 512             # fft size
 delay_b = 4             # tempo detection delay (blocks)
 
@@ -35,4 +36,25 @@ beat_times = beats/float(samplerate)    # convert beats (samples) to beats (seco
 dt = [j-i for i, j in zip(beat_times[:-1], beat_times[1:])] # array of times between each beat (seconds)
 
 ## control drone based on sequence
-drone = drone_presets.clean_Start()
+#drone = ps_drone.Drone
+#drone = drone_presets.clean_Start()
+
+#####################################################
+#                 MAIN LOOP                         #
+#####################################################
+#play song
+
+#wait till first beat catches up
+
+for i in range(0,len(dt)):
+
+    #alternate between 'dance moves'
+    #if i%2:
+    #    drone.led(7)    #all leds are red
+    #else: drone.led(8)   #all leds are green
+
+    time.sleep(dt)  #sleep for the time between beats
+
+
+
+

@@ -12,7 +12,7 @@ def clean_start():
     drone = ps_drone.Drone()    # Initializes the PS-Drone-API
     drone.startup()             # Connects to the drone and starts subprocesses
 
-    drone.reset()               # Sets drone’s LEDs to green when red
+    drone.reset()               # Sets drones LEDs to green when red
     while (drone.getBattery()[0]==-1): time.sleep(0.1) # Reset completed?
     print "battery:" + str(drone.getBattery()[0]) + "% " + str(drone.getBattery()[1])
     if drone.getBattery()[1] == "empty": sys.exit()
