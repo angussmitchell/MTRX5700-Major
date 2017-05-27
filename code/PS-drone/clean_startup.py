@@ -36,6 +36,7 @@ drone.getSelfRotation(5)
 drone.takeoff()
 
 time.sleep(7.5)                # Gives the drone time to start
+drone.mtrim()
 
 # start = time.time()
 # for i in range(20):
