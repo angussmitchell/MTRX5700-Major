@@ -44,7 +44,7 @@ drone = drone_presets.clean_start()
 #                 MAIN LOOP                         #
 #####################################################
 #play song
-command_str = 'play ' + filename + ' &'
+command_str = './playsong.sh ' + filename + ' &'
 os.system(command_str)  #play sound asyncronously (i.e. in the background)
 
 time.sleep(beats[0]/44100.0) #wait till first beat catches up
@@ -68,9 +68,9 @@ time.sleep(beats[0]/44100.0) #wait till first beat catches up
 
 # drone.turnAngle(179.9, 0.7)
 # drone.turnAngle(-179.9, 0.7)
-
+time.sleep(5)
 drone.land()        #finish program, land drone
-command_str = 'kill %1'
+command_str = './stopsong.sh'
 os.system(command_str)  #kill backgroun process
 
 
