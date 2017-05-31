@@ -15,23 +15,26 @@ dancer.takeoff(True)
 time.sleep(1)
 
 dancer.drone.moveUp(1)
-time.sleep(2)
+time.sleep(3.5)
 dancer.drone.hover()
-time.sleep(1)
-# dancer.do_move(dancer.dance_moves.MOVE_WIGGLE, 2.5, 8)
-# dancer.do_move(dancer.dance_moves.MOVE_CIRCLE, 3)
+# time.sleep(1)
+dancer.do_move(dancer.dance_moves.MOVE_WIGGLE, 1, 15)
+time.sleep(0.5)
+dancer.do_move(dancer.dance_moves.MOVE_FLIP, 3)
+dancer.do_move(dancer.dance_moves.MOVE_CIRCLE, 3)
+
 
 # dancer.drone.turnAngle(359, 1)
 # dancer.drone.relMove(0.0, 1.0, 0.0, 0.0, 0.0, 0.0)
 
-dancer.drone.anim(18, 15)
-time.sleep(0.45)
+# dancer.drone.anim(18, 15)
+# time.sleep(0.45)
 
 dancer.drone.stop()
 
 print('after move')
 
-time.sleep(4)
+time.sleep(1)
 # time.sleep(0.2)
 #
 # dancer.drone.moveUp(1)
