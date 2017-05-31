@@ -4,6 +4,45 @@ from drone_dancer import drone_dancer
 dancer = drone_dancer()
 
 
+dancer.takeoff(True)
+#
+# dancer.land()
+#
+# time.sleep(1)
+#
+# dancer.takeoff(False)
+
+time.sleep(1)
+
+dancer.drone.moveUp(1)
+time.sleep(2)
+dancer.drone.hover()
+time.sleep(1)
+# dancer.do_move(dancer.dance_moves.MOVE_WIGGLE, 2.5, 8)
+# dancer.do_move(dancer.dance_moves.MOVE_CIRCLE, 3)
+
+# dancer.drone.turnAngle(359, 1)
+# dancer.drone.relMove(0.0, 1.0, 0.0, 0.0, 0.0, 0.0)
+
+dancer.drone.anim(18, 15)
+time.sleep(0.45)
+
+dancer.drone.stop()
+
+print('after move')
+
+time.sleep(4)
+# time.sleep(0.2)
+#
+# dancer.drone.moveUp(1)
+# time.sleep(3)
+# dancer.drone.hover()
+# time.sleep(0.5)
+
+print('landing drone...')
+dancer.land()
+
+
 # dancer.drone.doggyWag()
 # dancer.drone.led(9, 1, 6)
 
@@ -21,5 +60,4 @@ dancer = drone_dancer()
 #     time.sleep(1)
 
 
-print('landing drone...')
-dancer.chill()
+# dancer.chill()
