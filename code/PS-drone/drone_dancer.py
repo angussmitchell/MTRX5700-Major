@@ -70,7 +70,7 @@ class drone_dancer:
         self.drone.land()
 
     # bust a move! # todo currently no way to set speed, only duration - you can use ps drone setspeed for now
-    def do_move(self, move_type, duration, frequency=2.5):  # todo fix sleep related errors
+    def do_move(self, move_type, duration=1, frequency=2.5):  # todo fix sleep related errors
         self.drone_state = self.drone_states.STATE_DANCING
 
         if move_type == self.dance_moves.MOVE_NONE:
@@ -106,18 +106,19 @@ class drone_dancer:
             if self.wiggle_motion_current == self.wiggle_motion.WIGGLE_NONE:
                 print('wiggle none, wiggling right...')
                 self.drone.moveRight(1)
-                wiggle_motion_current = self.wiggle_motion.WIGGLE_RIGHT
+                self.wiggle_motion_current = self.wiggle_motion.WIGGLE_RIGHT
             if self.wiggle_motion_current == self.wiggle_motion.WIGGLE_LEFT:
                 print('wiggle left, wiggling right...')
                 self.drone.moveRight(1)
-                wiggle_motion_current = self.wiggle_motion.WIGGLE_RIGHT
+                self.wiggle_motion_current = self.wiggle_motion.WIGGLE_RIGHT
             if self.wiggle_motion_current == self.wiggle_motion.WIGGLE_RIGHT:
                 print('wiggle right, wiggling left...')
                 self.drone.moveLeft(1)
-                wiggle_motion_current = self.wiggle_motion.WIGGLE_LEFT
+                self.wiggle_motion_current = self.wiggle_motion.WIGGLE_LEFT
 
         elif move_type == self.dance_moves.MOVE_WIGGLE_STOP:
             print('stopping wiggling ma niggling')
+            self.wiggle_motion_current = self.wiggle_motion.WIGGLE_NONE
             self.drone.stop()
 
         elif move_type == self.dance_moves.MOVE_CIRCLE:

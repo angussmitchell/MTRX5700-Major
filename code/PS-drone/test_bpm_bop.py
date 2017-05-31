@@ -12,16 +12,32 @@ dancer.takeoff(True)
 #
 # dancer.takeoff(False)
 
-time.sleep(1)
-
-dancer.drone.moveUp(1)
-time.sleep(3.5)
-dancer.drone.hover()
 # time.sleep(1)
-dancer.do_move(dancer.dance_moves.MOVE_WIGGLE, 1, 15)
-time.sleep(0.5)
-dancer.do_move(dancer.dance_moves.MOVE_FLIP, 3)
-dancer.do_move(dancer.dance_moves.MOVE_CIRCLE, 3)
+#
+# dancer.drone.moveUp(1)
+# time.sleep(1)
+# dancer.drone.hover()
+# time.sleep(1)
+# dancer.do_move(dancer.dance_moves.MOVE_WIGGLE, 2, 15)
+# time.sleep(0.5)
+# dancer.do_move(dancer.dance_moves.MOVE_FLIP, 3)
+# dancer.do_move(dancer.dance_moves.MOVE_WIGGLE, 2, 10)
+# dancer.do_move(dancer.dance_moves.MOVE_CIRCLE, 3)
+
+
+# dancer.do_move(dancer.dance_moves.MOVE_WIGGLE_TOGGLE)
+# time.sleep(0.1)
+# dancer.do_move(dancer.dance_moves.MOVE_WIGGLE_TOGGLE)
+# time.sleep(0.1)
+# dancer.do_move(dancer.dance_moves.MOVE_WIGGLE_TOGGLE)
+# time.sleep(0.1)
+# dancer.do_move(dancer.dance_moves.MOVE_WIGGLE_TOGGLE)
+# time.sleep(0.1)
+# dancer.do_move(dancer.dance_moves.MOVE_WIGGLE_TOGGLE)
+# time.sleep(0.1)
+# dancer.do_move(dancer.dance_moves.MOVE_WIGGLE_TOGGLE)
+# time.sleep(0.1)
+# dancer.do_move(dancer.dance_moves.MOVE_WIGGLE_STOP)
 
 
 # dancer.drone.turnAngle(359, 1)
