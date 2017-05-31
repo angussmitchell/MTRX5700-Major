@@ -14,6 +14,7 @@ import aubio
 import ps_drone         # PS-drone API
 import drone_presets    # import drone functions that we wrote
 from recorded_music import get_beats  #import music processing functions
+import os
 
 ## implement later when we have live music working
 #live = False
@@ -21,12 +22,12 @@ from recorded_music import get_beats  #import music processing functions
 #    import liveMusic
 #else:
 #    import recordedMusic
-import recorded_music
+
 
 ## do music processing first
 
 # beat detection variables
-filename = 'music/Angels  Airwaves - It Hurts (Audio Video).wav'
+filename = 'Angels.wav'
 win_s = 512             # fft size
 delay_b = 4             # tempo detection delay (blocks)
 
@@ -34,27 +35,43 @@ samplerate, beats = get_beats(filename, win_s, delay_b)  # get the detected beat
 
 beat_times = beats/float(samplerate)    # convert beats (samples) to beats (seconds)
 dt = [j-i for i, j in zip(beat_times[:-1], beat_times[1:])] # array of times between each beat (seconds)
+dt = np.asarray(dt,dtype = float)
 
 ## control drone based on sequence
-#drone = ps_drone.Drone
-#drone = drone_presets.clean_Start()
+drone = drone_presets.clean_start()
 
 #####################################################
 #                 MAIN LOOP                         #
 #####################################################
 #play song
+command_str = './playsong.sh ' + filename + ' &'
+os.system(command_str)  #play sound asyncronously (i.e. in the background)
 
-#wait till first beat catches up
+time.sleep(beats[0]/44100.0) #wait till first beat catches up
 
-for i in range(0,len(dt)):
+# for i in range(0,40,2):
+#
+#     #alternate between 'dance moves'
+#     if i%4:
+#         drone.relMove(0,0,0,1)    #all leds are red
+#         print("left!")
+#     else:
+#         drone.relMove(0,0,0,-1)   #all leds ardrone = ps_drone.Dronee green
+#         print("right!")
+#
+#     time.sleep(dt[i]+dt[i+1])  #sleep for the time between beats
+#
+#
+# #do a flip to end it
+# drone.anim(18,5)
+# print("backflip!")
 
-    #alternate between 'dance moves'
-    #if i%2:
-    #    drone.led(7)    #all leds are red
-    #else: drone.led(8)   #all leds are green
-
-    time.sleep(dt)  #sleep for the time between beats
-
-
+# drone.turnAngle(179.9, 0.7)
+# drone.turnAngle(-179.9, 0.7)
+time.sleep(5)
+drone.land()        #finish program, land drone
+command_str = './stopsong.sh'
+os.system(command_str)  #kill backgroun process
 
 
+drone.doggyWag()

@@ -40,11 +40,12 @@ def get_beats(samples, samplerate = 44100):
     win_s = 512  # fft size
     hop_s = win_s // 2  # hop size
     o = aubio.tempo("default", win_s, hop_s, samplerate)
-    samples = samples * 600
     is_beat = o(samples)
     if is_beat:
         return 1
-    return 0
+
+    sum = np.nansum(samples)
+    return sum
 
 #####################################################
 #       MAIN CODE                                   #
@@ -73,9 +74,10 @@ print "recording..."
 while(1):
 
     frames = get_chunk(frame_size = frame_size)
-    #plt.ylim([-100,48000])
-    #plt.plot(frames)
-    #plt.pause(0.05)
+    plt.clf()
+    plt.ylim([-3,3])
+    plt.plot(frames)
+    plt.pause(0.05)
     print(get_beats(frames.reshape(len(frames))))
 
 # stop Recording

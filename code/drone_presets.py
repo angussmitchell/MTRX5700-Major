@@ -5,7 +5,8 @@
 # drone_presets.py
 #  - collection of functions for preset moves on the drone
 #  - e.g. clean start up, bobbing, spinning, landing
-
+import ps_drone
+import time
 
 ## clean start up routine
 def clean_start():
@@ -28,5 +29,7 @@ def clean_start():
     drone.takeoff()
     time.sleep(7.5)             # gives the drone time to start
     while drone.NavData["demo"][0][2]: time.sleep(0.1)  # still in landed mode?
+    drone.mtrim()
+    time.sleep(3)
     return drone
 

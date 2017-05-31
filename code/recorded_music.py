@@ -6,6 +6,8 @@
 #  - all the music processing functions
 import aubio
 import numpy as np
+import pyaudio
+import wave
 
 ## detect the beats in the song
 def get_beats(filename, win_s, delay_b):
@@ -32,6 +34,10 @@ def get_beats(filename, win_s, delay_b):
 
     beats = np.asarray(beats)   #convert beats from list to array
     return samplerate, beats
+
+
+
+
 
 ### convert an array of sample indices to time in seconds
 #def samples_to_seconds(samples_ind)
