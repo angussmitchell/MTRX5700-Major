@@ -4,31 +4,37 @@ from drone_dancer import drone_dancer
 dancer = drone_dancer()
 
 
-dancer.takeoff(True)
+# dancer.takeoff(True)
 #
 # dancer.land()
 #
 # time.sleep(1)
 #
-# dancer.takeoff(False)
+dancer.takeoff(False)
 
 # time.sleep(1)
-#
+
 # dancer.drone.moveUp(1)
 # time.sleep(1)
-# dancer.drone.hover()
-# time.sleep(1)
+dancer.drone.hover()
+time.sleep(1)
 # dancer.do_move(dancer.dance_moves.MOVE_WIGGLE, 2, 15)
 # time.sleep(0.5)
 # dancer.do_move(dancer.dance_moves.MOVE_FLIP, 3)
-# dancer.do_move(dancer.dance_moves.MOVE_WIGGLE, 2, 10)
+# dancer.do_move(dancer.dance_moves.MOVE_WIGGLE, 2, 5)
 # dancer.do_move(dancer.dance_moves.MOVE_CIRCLE, 3)
 
+# dancer.drone.moveRight(1)
+dancer.do_move(dancer.dance_moves.MOVE_WIGGLE_TOGGLE)
+print('before sleep')
+time.sleep(0.2)
+print('after sleep')
+dancer.do_move(dancer.dance_moves.MOVE_WIGGLE_TOGGLE)
+# dancer.drone.moveLeft(1)
+time.sleep(0.2)
 
 # dancer.do_move(dancer.dance_moves.MOVE_WIGGLE_TOGGLE)
-# time.sleep(0.1)
-# dancer.do_move(dancer.dance_moves.MOVE_WIGGLE_TOGGLE)
-# time.sleep(0.1)
+# time.sleep(0.2)
 # dancer.do_move(dancer.dance_moves.MOVE_WIGGLE_TOGGLE)
 # time.sleep(0.1)
 # dancer.do_move(dancer.dance_moves.MOVE_WIGGLE_TOGGLE)
@@ -48,7 +54,7 @@ dancer.takeoff(True)
 
 dancer.drone.stop()
 
-print('after move')
+print('stopped drone')
 
 time.sleep(1)
 # time.sleep(0.2)
