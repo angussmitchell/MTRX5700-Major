@@ -12,7 +12,9 @@ def cluster(data,samplerate = 44100):
     ## set up parameter
     num_features = 2
     num_coeficients = 15
-    chunk_size = 4096
+    chunk_size = 1024*50
+    min_bin_freq = 7       #minimum number of samples to form a cluster
+    print "cluster chunk size = " + str(float(chunk_size/samplerate)) + " seconds"
     num_chunks = len(data)/chunk_size-1
     ceps = []
     features = np.zeros((num_chunks, num_coeficients))
@@ -52,16 +54,17 @@ def cluster(data,samplerate = 44100):
     # plt.show()
 
     # Do MeanShift clustering
-    bandwidth = estimate_bandwidth(features, quantile=0.1, n_samples=num_chunks)
-    ms = MeanShift(bandwidth = bandwidth, bin_seeding=True,cluster_all = False,n_jobs = -1, min_bin_freq= 50)     #setup MeanShift parameters
+    bandwidth = estimate_bandwidth(features, quantile=0.3, n_samples=num_chunks)
+    ms = MeanShift(bandwidth = bandwidth, bin_seeding=True,cluster_all = False,n_jobs = -1, min_bin_freq= 10)     #setup MeanShift parameters
     ms.fit(features)                                        #fit MeanShift to data
     labels = ms.labels_                                         #collect cluster labels
     cluster_centers = ms.cluster_centers_                       #record cluster centers
     unique_labels = np.unique(labels)                           #get unique clusters
     n_clusters = len(unique_labels)                            #get the number of unique clusters
 
-    fig = plt.figure()
-    ax = fig.add_subplot(111, projection='3d')
+    print  str(n_clusters) + " clusters found"
+    #fig = plt.figure()
+    #ax = fig.add_subplot(111, projection='3d')
 
     #plotting - a different colour for every cluster
     # colours = "rgbyk"
@@ -74,6 +77,7 @@ def cluster(data,samplerate = 44100):
     # plt.show()
 
 
-    return 0
+
+    return time, labels
     #now we have features, we should get clusters
 

@@ -12,17 +12,26 @@ import matplotlib.pyplot as plt
 from cluster import cluster
 
 # read in raw data
-rate, raw_data = wavfile.read("../music/cannon.wav")
+rate, raw_data = wavfile.read("../music/Angles.wav")
 data = (raw_data[:,0]/2.0+raw_data[:,1]/2.0)
 
 # get mfcc
-cluster(data,samplerate=44100)
+time, labels = cluster(data,samplerate=44100)
 
-# #plot the song
-# plt.plot(raw_data,'r')
-# plt.ylabel('amplitude')
-# plt.xlabel('sample No.')
-# plt.title('raw .WAV data')
-# plt.axis([0, 9050000, -40000, 40000])
-#plt.show()
+
+data = data[1::10]
+x = range(0, len(data))
+ #plot the song
+plt.subplot(211)
+plt.scatter(time, labels)
+plt.ylabel('amplitude')
+plt.xlabel('sample No.')
+plt.title('raw .WAV data')
+plt.grid()
+plt.axis([0, max(time), min(labels),max(labels) ])
+plt.subplot(212)
+plt.plot(x, data)
+plt.grid()
+plt.axis([0, max(x), min(data), max(data)])
+plt.show()
 
