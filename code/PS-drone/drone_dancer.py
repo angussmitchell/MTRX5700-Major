@@ -133,70 +133,41 @@ class drone_dancer:
             self.chill()
         elif move_type == self.dance_moves.MOVE_FIGURE_EIGHT:
             print('figure 8!')
-            self.drone.turnLeft(duration, 1.2)
-            time.sleep(duration)
-            self.drone.turnRight(duration, 1.2)
-            time.sleep(duration)
+            dancer.drone.move(0.0, 0.0, 0.5, 1.0)
+            time.sleep(1.1)
+            dancer.drone.move(0.0, 0.0, 0.0, 1.0)
+            time.sleep(0.3)
+            dancer.do_move(dancer.dance_moves.MOVE_FLIP)
+            dancer.drone.move(0.0, 0.0, -0.25, 1.0)
+            time.sleep(2)
+            dancer.drone.move(0.0, 0.0, 0.75, 1.0)
+            time.sleep(1.1)
+            dancer.drone.move(0.0, 0.0, 0.0, 1.0)
+            time.sleep(0.3)
+            dancer.drone.move(0.0, 0.0, -0.25, 1.0)
+            time.sleep(2)
             self.chill()
 
         elif move_type == self.dance_moves.MOVE_QUICK_BOB:
             print('quick bob!')
+            # self.drone.moveForward(1)
+            #2.0943952e-01 default
+            self.drone.setConfig('control:euler_angle_max', '2')
+            nod_time = 0.1
+            # hover_time = 0.1
             self.drone.moveForward(1)
-            time.sleep(0.1)
+            # self.drone.move(0.0, 1.0, 0.0, 0.0)
+            time.sleep(nod_time)
+            self.drone.moveBackward(1)
+            # self.drone.move(0.0, -1.0, 0.0, 0.0)
+            time.sleep(nod_time)
+            # self.drone.stop()
+            # time.sleep(hover_time)
+            self.drone.setConfig('control:euler_angle_max', '0.21')
             self.chill()
 
 
     def chill(self):
         self.drone.hover()
         self.drone_state = self.drone_states.STATE_HOVER
-
-
-        # todo put in dance function
-    #
-    # def start_bob(self, initial_direction=bob_motion.MOTION_UP):
-    #     # bob_state_next = initial_direction
-    #     self.bob_state_current = initial_direction
-    #
-    # def bob(self):
-    #     print('bobbing...')
-    #
-    #     # # check if we need to change the move state
-    #     # if self.current_offset_s > (self.beat_length_s - self.movement_pre_offset_s):
-    #     #     print('changing movement state')
-    #     #     if self.bob_state_current == self.bob_motion.MOTION_DOWN:
-    #     #         self.bob_state_next = self.bob_motion.MOTION_UP
-    #     #     elif self.bob_state_current == self.bob_motion.MOTION_UP:
-    #     #         self.bob_state_next = self.bob_motion.MOTION_DOWN
-    #     #     elif self.bob_state_current == self.bob_motion.MOTION_NONE:
-    #     #         print('not changing bob state, current state is none')
-    #
-    #
-    #     # # change the move state if we need to
-    #     # if self.bob_state_current != self.bob_state_next:
-    #     #     print('changing current bob state')
-    #     #     if self.bob_state_next == self.bob_motion.MOTION_NONE:
-    #     #         print('bob motion none')
-    #     #         self.drone.hover()
-    #     #     elif self.bob_state_next == self.bob_motion.MOTION_UP:
-    #     #         print('bob motion up')
-    #     #         self.drone.moveUp(self.drone_move_speed)
-    #     #     elif self.bob_state_next == self.bob_motion.MOTION_DOWN:
-    #     #         print('bob motion down')
-    #     #         self.drone.moveDown(self.drone_move_speed)
-    #
-    #     if self.bob_state_current == self.bob_motion.MOTION_NONE:
-    #         print('bob motion none')
-    #         self.drone.hover()
-    #
-    #     elif self.bob_state_current == self.bob_motion.MOTION_UP:
-    #         print('bob motion up')
-    #         self.drone.moveUp(self.drone_move_speed_up)
-    #         self.bob_state_current = self.bob_motion.MOTION_DOWN
-    #
-    #     elif self.bob_state_current == self.bob_motion.MOTION_DOWN:
-    #         print('bob motion down')
-    #         # self.drone.moveDown(self.drone_move_speed_down)
-    #         # self.drone.thrust(0, 0, 0, 0)
-    #         self.drone.at("PWM", [1, 1, 1, 1])
-    #         self.bob_state_current = self.bob_motion.MOTION_UP
 

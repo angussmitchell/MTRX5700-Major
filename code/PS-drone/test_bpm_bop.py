@@ -12,12 +12,12 @@ dancer = drone_dancer()
 #
 dancer.takeoff(True)
 
-# dancer.drone.getConfig()
-# CDC = dancer.drone.ConfigDataCount
-# while CDC==dancer.drone.ConfigDataCount: time.sleep(0.001) #Wait until it is done
-#
-#
-# print(str(dancer.drone.ConfigData))
+dancer.drone.getConfig()
+CDC = dancer.drone.ConfigDataCount
+while CDC==dancer.drone.ConfigDataCount: time.sleep(0.001) #Wait until it is done
+
+
+print(str(dancer.drone.ConfigData))
 
 
 # dancer.drone.setConfig('control:control_vz_max', '2000')
@@ -25,22 +25,44 @@ dancer.drone.setConfig('control:indoor_control_vz_max', '2000')
 dancer.drone.setConfig('control:indoor_control_yaw', '6.11')
 
 
-# time.sleep(1)
 
-# dancer.drone.moveUp(1)
-dancer.drone.move(0.0, 0.0, 0.5, 1.0)
-time.sleep(1.1)
-dancer.drone.move(0.0, 0.0, 0.0, 1.0)
-time.sleep(0.3)
-dancer.do_move(dancer.dance_moves.MOVE_FLIP)
-dancer.drone.move(0.0, 0.0, -0.25, 1.0)
+
+sleeptime = 0.5
+
+print('starting bop')
+
+dancer.do_move(drone_dancer.dance_moves.MOVE_QUICK_BOB)
+time.sleep(sleeptime)
+# dancer.do_move(drone_dancer.dance_moves.MOVE_QUICK_BOB)
+# time.sleep(sleeptime)
+# dancer.do_move(drone_dancer.dance_moves.MOVE_QUICK_BOB)
+# time.sleep(sleeptime)
+# time.sleep(sleeptime)
+
+
 time.sleep(2)
-dancer.drone.move(0.0, 0.0, 0.75, 1.0)
-time.sleep(1.1)
-dancer.drone.move(0.0, 0.0, 0.0, 1.0)
-time.sleep(0.3)
-dancer.drone.move(0.0, 0.0, -0.25, 1.0)
-time.sleep(2)
+
+
+
+
+# figure 8 below
+# dancer.drone.move(0.0, 0.0, 0.5, 1.0)
+# time.sleep(1.1)
+# dancer.drone.move(0.0, 0.0, 0.0, 1.0)
+# time.sleep(0.3)
+# dancer.do_move(dancer.dance_moves.MOVE_FLIP)
+# dancer.drone.move(0.0, 0.0, -0.25, 1.0)
+# time.sleep(2)
+# dancer.drone.move(0.0, 0.0, 0.75, 1.0)
+# time.sleep(1.1)
+# dancer.drone.move(0.0, 0.0, 0.0, 1.0)
+# time.sleep(0.3)
+# dancer.drone.move(0.0, 0.0, -0.25, 1.0)
+# time.sleep(2)
+
+
+
+
 # dancer.drone.move(0.0, 0.0, -1.0, 0.0)
 # time.sleep(0.6)
 # dancer.drone.move(0.0, 0.0, 1.0, 0.0)
