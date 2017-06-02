@@ -27,6 +27,7 @@ class drone_dancer:
         MOVE_FIGURE_EIGHT   = 7  # figure 8 on horizontal plane
         MOVE_SPIRAL_UP      = 8  # todo spiral up
         MOVE_SPIRAL_DOWN    = 9  # todo spiral down
+        MOVE_QUICK_BOB      = 10 # todo single bob like in ardrone demo
 
     # the current move we're doing
     current_move = dance_moves.MOVE_NONE
@@ -136,6 +137,12 @@ class drone_dancer:
             time.sleep(duration)
             self.drone.turnRight(duration, 1.2)
             time.sleep(duration)
+            self.chill()
+
+        elif move_type == self.dance_moves.MOVE_QUICK_BOB:
+            print('quick bob!')
+            self.drone.moveForward(1)
+            time.sleep(0.1)
             self.chill()
 
 

@@ -10,14 +10,53 @@ dancer = drone_dancer()
 #
 # time.sleep(1)
 #
-dancer.takeoff(False)
+dancer.takeoff(True)
+
+# dancer.drone.getConfig()
+# CDC = dancer.drone.ConfigDataCount
+# while CDC==dancer.drone.ConfigDataCount: time.sleep(0.001) #Wait until it is done
+#
+#
+# print(str(dancer.drone.ConfigData))
+
+
+# dancer.drone.setConfig('control:control_vz_max', '2000')
+dancer.drone.setConfig('control:indoor_control_vz_max', '2000')
+dancer.drone.setConfig('control:indoor_control_yaw', '6.11')
+
 
 # time.sleep(1)
 
 # dancer.drone.moveUp(1)
-# time.sleep(1)
-dancer.drone.hover()
-time.sleep(1)
+dancer.drone.move(0.0, 0.0, 0.5, 1.0)
+time.sleep(1.1)
+dancer.drone.move(0.0, 0.0, 0.0, 1.0)
+time.sleep(0.3)
+dancer.do_move(dancer.dance_moves.MOVE_FLIP)
+dancer.drone.move(0.0, 0.0, -0.25, 1.0)
+time.sleep(2)
+dancer.drone.move(0.0, 0.0, 0.75, 1.0)
+time.sleep(1.1)
+dancer.drone.move(0.0, 0.0, 0.0, 1.0)
+time.sleep(0.3)
+dancer.drone.move(0.0, 0.0, -0.25, 1.0)
+time.sleep(2)
+# dancer.drone.move(0.0, 0.0, -1.0, 0.0)
+# time.sleep(0.6)
+# dancer.drone.move(0.0, 0.0, 1.0, 0.0)
+# time.sleep(0.6)
+# dancer.drone.move(0.0, 0.0, -1.0, 0.0)
+# time.sleep(0.6)
+# dancer.drone.move(0.0, 0.0, 1.0, 0.0)
+# time.sleep(0.6)
+# dancer.drone.move(0.0, 0.0, -1.0, 0.0)
+# time.sleep(0.6)
+# dancer.drone.moveUp(1)
+# time.sleep(0.5)
+# dancer.drone.moveDown(1)
+# # time.sleep(0.5)
+# dancer.drone.hover()
+# time.sleep(0.5)
 # dancer.do_move(dancer.dance_moves.MOVE_WIGGLE, 2, 15)
 # time.sleep(0.5)
 # dancer.do_move(dancer.dance_moves.MOVE_FLIP, 3)
@@ -25,13 +64,13 @@ time.sleep(1)
 # dancer.do_move(dancer.dance_moves.MOVE_CIRCLE, 3)
 
 # dancer.drone.moveRight(1)
-dancer.do_move(dancer.dance_moves.MOVE_WIGGLE_TOGGLE)
-print('before sleep')
-time.sleep(0.2)
-print('after sleep')
-dancer.do_move(dancer.dance_moves.MOVE_WIGGLE_TOGGLE)
+# dancer.do_move(dancer.dance_moves.MOVE_WIGGLE_TOGGLE)
+# print('before sleep')
+# time.sleep(0.2)
+# print('after sleep')
+# dancer.do_move(dancer.dance_moves.MOVE_WIGGLE_TOGGLE)
 # dancer.drone.moveLeft(1)
-time.sleep(0.2)
+# time.sleep(0.2)
 
 # dancer.do_move(dancer.dance_moves.MOVE_WIGGLE_TOGGLE)
 # time.sleep(0.2)
@@ -54,9 +93,9 @@ time.sleep(0.2)
 
 dancer.drone.stop()
 
-print('stopped drone')
-
-time.sleep(1)
+# print('stopped drone')
+#
+# time.sleep(1)
 # time.sleep(0.2)
 #
 # dancer.drone.moveUp(1)
