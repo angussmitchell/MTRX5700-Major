@@ -17,16 +17,11 @@ import drone_presets    # import drone functions that we wrote
 from recorded_music import get_beats  #import music processing functions
 import os
 from drone_dancer import drone_dancer
+import subprocess
+import pyaudio
+import wave
 
-# dancer = drone_dancer()
-
-## implement later when we have live music working
-#live = False
-#if live == True         # check if we want the drone to dance to live music
-#    import liveMusic
-#else:
-#    import recordedMusic
-
+chunk = 1024
 
 ## do music processing first
 
@@ -48,18 +43,61 @@ dt = np.asarray(dt,dtype = float)
 #                 MAIN LOOP                         #
 #####################################################
 #play song
-command_str = './music/playsong.sh ' + './music/' + filename + ' &>/dev/null'
-print(command_str)
-os.system(command_str)  #play sound asyncronously (i.e. in the background)
+command_0_str = './playsong.sh'
+command_param = './music/' + filename
+# command_str = './music/playsong.sh ' + './music/' + filename + ' &>/dev/null'
+# print(command_str)
+# os.system(command_str)  #play sound asyncronously (i.e. in the background)
 
+
+
+f = wave.open(command_param,"rb")
+
+p = pyaudio.PyAudio()
+#open stream
+stream = p.open(format = p.get_format_from_width(f.getsampwidth()),
+                channels = f.getnchannels(),
+                rate = f.getframerate(),
+                output = True)
+#read data
+data = f.readframes(chunk)
+
+chunk_number = 0
+
+#play stream
+while data:
+    stream.write(data)
+    current_time = (chunk * (chunk_number) + 0.0)/f.getframerate()
+    chunk_number = chunk_number + 1
+    print('current time is %f' % current_time)
+    data = f.readframes(chunk)
+
+#stop stream
+stream.stop_stream()
+stream.close()
+
+#close PyAudio
+p.terminate()
+
+
+# proc = subprocess.Popen([command_0_str + ' ' + command_param], stdout=subprocess.PIPE, shell=True)
+# (out, err) = proc.communicate()
+#
+#
+# print(str(err))
+#
+# print "program output:", out
+
+
+# proc.kill()
 
 # time.sleep(beats[0]/float(samplerate)) #wait till first beat catches up
 
-for i in range(0, 300, 1):
-    print('beat ' + str(i))
-    print('dt ' + str(dt[i]))
-    print('current bpm: ' + str(1.0/dt[i] * 60))
-    time.sleep(dt[i])
+# for i in range(0, 300, 1):
+#     print('beat ' + str(i))
+#     print('dt ' + str(dt[i]))
+#     print('current bpm: ' + str(1.0/dt[i] * 60))
+#     time.sleep(dt[i])
 #
 #     sleeptime = 1.0 / (163.0 / 60)
 #
@@ -101,8 +139,8 @@ for i in range(0, 300, 1):
 # drone.turnAngle(-179.9, 0.7)
 time.sleep(1)
 # drone.land()        #finish program, land drone
-command_str = './music/stopsong.sh'
-os.system(command_str)  #kill backgroun process
+# command_str = './music/stopsong.sh'
+# os.system(command_str)  #kill backgroun process
 
 
 # drone.doggyWag()
