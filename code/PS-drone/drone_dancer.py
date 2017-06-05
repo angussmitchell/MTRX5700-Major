@@ -14,10 +14,10 @@ class drone_dancer:
 
     # dance move class for queue
     class dance_move:
-        def __init__(self, move_type = 1, duration = 1, frequency = 2):
-            move_type = move_type # move type, from dance_moves class
-            duration  = duration # duration in seconds
-            frequency = frequency
+        def __init__(self, move_type = 1, duration = 1.0, frequency = 2.0):
+            self.move_type = move_type # move type, from dance_moves class
+            self.duration  = duration # duration in seconds
+            self.frequency = frequency
 
 
     # not sure if we need this - code is sequential anyway but I'll leave it in for now
@@ -65,106 +65,122 @@ class drone_dancer:
     wiggle_motion_current = wiggle_motion.WIGGLE_NONE
 
     def __init__(self):
-        self.drone.startup()
-        self.drone.reset()
-        print("battery level: " + str(self.drone.getBattery()[0]) + '%')
+        #self.drone.startup()
+        #self.drone.reset()
+        #print("battery level: " + str(#self.drone.getBattery()[0]) + '%')
         print('initialized drone dancer')
+
+        self.__dancing = False
 
     # 3 2 1 liftoff
     def takeoff(self, mtrim):
-        self.drone.takeoff()
+        #self.drone.takeoff()
         time.sleep(7.5)
 
         if mtrim:
-            self.drone.mtrim()
+            #self.drone.mtrim()
             time.sleep(4)
 
-        self.drone.hover()
+        #self.drone.hover()
         self.drone_state = self.drone_states.STATE_HOVER
 
     # lands the drone
     def land(self):
         self.drone_state = self.drone_states.STATE_LANDED
-        self.drone.land()
+        #self.drone.land()
 
     # adds a move to the drone's queue
-    def enqueue_move(self, move_type, duration):
-        self.move_queue.put(self.dance_move(move_type, duration))
+    def enqueue_move(self, move_type, duration, frequency = 0.0):
+        print('enqueued move number ' + str(move_type) + ' with duration ' + str(duration) + ', frequency ' + str(frequency))
+        self.move_queue.put(self.dance_move(move_type, duration, frequency))
 
     # worker function that reads moves from the move queue and dances accordingly
     def __dance_worker(self):
-        while self.dancing:
+        while self.__dancing:
             if self.move_queue.empty():
-                time.sleep(0.001) # wait a bit if we don't have any moves to do
+                time.sleep(0.01) # wait a bit if we don't have any moves to do
             else:
-                self.do_move(self.move_queue.get())
+                move = self.move_queue.get()
+                print('doing move number ' + str(move.move_type))
+                self.__do_move(move)
 
     # start the drone dancing at the next move in the move queue, hovers if the queue is empty
     def start_dancing(self):
-        self.__dance_thread = threading.Thread(target=self.__dance_worker)
-        self.__dancing = True
-        self.__dance_thread.start() # start the dancer worker function
-        self.__dance_thread.join()
+        if not self.__dancing:
+            print('starting to dance')
+            self.__dance_thread = threading.Thread(target=self.__dance_worker)
+            self.__dancing = True
+            self.__dance_thread.start() # start the dancer worker function
+        else:
+            print('already dancing')
 
-    # stop the drone dancing when the current move is complete
+    # stop the drone dancing when the current move is complete, clears the move queue
     def stop_dancing(self):
         if not self.__dance_thread or self.__dance_thread.isAlive() == False:
             print('Unable to stop dancing: The drone is not currently dancing.')
         else:
-            self.dancing = False
+            print('Telling dance worker to stop...')
+            self.__dancing = False
+            self.__dance_thread.join()
+            self.move_queue.queue.clear()
+            print('Stopped dancing')
+
+    # converts a bpm to a frequency in Hz
+    def __bpm_to_frequency(self, bpm = 128.0):
+        return float(bpm)/60.0
 
     # do_move wrapper todo just change do_move to this
     def __do_move(self, dance_move):
         self.do_move(dance_move.move_type, dance_move.duration, dance_move.frequency)
 
     # bust a move! # todo currently no way to set speed, only duration - you can use ps drone setspeed for now
-    def do_move(self, move_type, duration=1, frequency=2.5):  # todo fix sleep related errors
+    def do_move(self, move_type, duration=1.0, frequency=2.5):  # todo fix sleep related errors
         self.drone_state = self.drone_states.STATE_DANCING
 
         if move_type == self.dance_moves.MOVE_NONE:
             self.drone_state = self.drone_states.STATE_HOVER
-            self.drone.hover()
+            #self.drone.hover()
             time.sleep(duration)
 
         elif move_type == self.dance_moves.MOVE_FLIP:
             print('flipping!')
-            self.drone.anim(18, 15)
+            #self.drone.anim(18, 15)
             time.sleep(0.45)
-            self.drone.stop()
+            #self.drone.stop()
 
             if (duration < 0.45):
                 time.sleep(0.45 - duration)
             elif duration > 0.45:
                 time.sleep(duration - 0.45)
-            self.drone.stop()
+            #self.drone.stop()
 
         elif move_type == self.dance_moves.MOVE_WIGGLE:
             print('wiggling!')
             for i in range(0, int(math.ceil(duration * frequency)), 1):
                 if i % 2:
                     print('wiggle left')
-                    self.drone.moveLeft(1)
+                    #self.drone.moveLeft(1)
                 else:
                     print('wiggle right')
-                    self.drone.moveRight(1)
+                    #self.drone.moveRight(1)
 
                 time.sleep((duration + 0.0) / frequency)
-            self.drone.stop()
+            #self.drone.stop()
 
         elif move_type == self.dance_moves.MOVE_WIGGLE_TOGGLE:
             print('toggling wiggle ma niggle')
             if self.wiggle_motion_current == self.wiggle_motion.WIGGLE_NONE:
                 print('wiggle none, wiggling right...')
                 self.wiggle_motion_current = self.wiggle_motion.WIGGLE_RIGHT
-                self.drone.moveRight(1)
+                #self.drone.moveRight(1)
             elif self.wiggle_motion_current == self.wiggle_motion.WIGGLE_LEFT:
                 print('wiggle left, wiggling right...')
                 self.wiggle_motion_current = self.wiggle_motion.WIGGLE_RIGHT
-                self.drone.moveRight(1)
+                #self.drone.moveRight(1)
             elif self.wiggle_motion_current == self.wiggle_motion.WIGGLE_RIGHT:
                 print('wiggle right, wiggling left...')
                 self.wiggle_motion_current = self.wiggle_motion.WIGGLE_LEFT
-                self.drone.moveLeft(1)
+                #self.drone.moveLeft(1)
 
         elif move_type == self.dance_moves.MOVE_WIGGLE_STOP:
             print('stopping wiggling ma niggling')
@@ -173,68 +189,68 @@ class drone_dancer:
 
         elif move_type == self.dance_moves.MOVE_CIRCLE:
             print('circle!')
-            self.drone.turnLeft(duration, 1.2)
+            #self.drone.turnLeft(duration, 1.2)
             time.sleep(duration)
             self.chill()
         elif move_type == self.dance_moves.MOVE_FIGURE_EIGHT:
             print('figure 8!')
-            self.drone.move(0.0, 0.0, 0.5, 1.0)
+            #self.drone.move(0.0, 0.0, 0.5, 1.0)
             time.sleep(1.1)
-            self.drone.move(0.0, 0.0, 0.0, 1.0)
+            #self.drone.move(0.0, 0.0, 0.0, 1.0)
             time.sleep(0.3)
             self.do_move(self.dance_moves.MOVE_FLIP)
-            self.drone.move(0.0, 0.0, -0.25, 1.0)
+            #self.drone.move(0.0, 0.0, -0.25, 1.0)
             time.sleep(2)
-            self.drone.move(0.0, 0.0, 0.75, 1.0)
+            #self.drone.move(0.0, 0.0, 0.75, 1.0)
             time.sleep(1.1)
-            self.drone.move(0.0, 0.0, 0.0, 1.0)
+            #self.drone.move(0.0, 0.0, 0.0, 1.0)
             time.sleep(0.3)
-            self.drone.move(0.0, 0.0, -0.25, 1.0)
+            #self.drone.move(0.0, 0.0, -0.25, 1.0)
             time.sleep(2)
             self.chill()
 
-        elif move_type == self.dance_moves.MOVE_QUICK_BOB:
+        elif move_type == self.dance_moves.MOVE_QUICK_BOB: # todo use anim instead
             print('quick bob!')
-            # self.drone.moveForward(1)
+            # #self.drone.moveForward(1)
             #2.0943952e-01 default
-            self.drone.setConfig('control:euler_angle_max', '2')
+            #self.drone.setConfig('control:euler_angle_max', '2')
             nod_time = 0.1
             # hover_time = 0.1
-            self.drone.moveForward(1)
-            # self.drone.move(0.0, 1.0, 0.0, 0.0)
+            #self.drone.moveForward(1)
+            # #self.drone.move(0.0, 1.0, 0.0, 0.0)
             time.sleep(nod_time)
-            self.drone.moveBackward(1)
-            # self.drone.move(0.0, -1.0, 0.0, 0.0)
+            #self.drone.moveBackward(1)
+            # #self.drone.move(0.0, -1.0, 0.0, 0.0)
             time.sleep(nod_time)
-            # self.drone.stop()
+            # #self.drone.stop()
             # time.sleep(hover_time)
-            self.drone.setConfig('control:euler_angle_max', '0.21')
+            #self.drone.setConfig('control:euler_angle_max', '0.21')
             self.chill()
 
-        elif move_type == self.dance_moves.MOVE_BOB_CLOCKWISE: # todo test this
+        elif move_type == self.dance_moves.MOVE_BOB_CLOCKWISE:
             print('clockwise bob!')
             if self.bob_state_current == self.bob_motion.MOTION_LEFT \
                     or self.bob_state_current == self.bob_motion.MOTION_NONE:
                 print('no bob motion, bobbing forward')
-                self.drone.anim(0, 1000)
+                #self.drone.anim(0, 1000)
                 self.bob_state_current = self.bob_motion.MOTION_FORWARD
             elif self.bob_state_current == self.bob_motion.MOTION_FORWARD:
                 print('bobbed forwards last, bobbing right')
-                self.drone.anim(2, 1000)
+                #self.drone.anim(2, 1000)
                 self.bob_state_current = self.bob_motion.MOTION_RIGHT
             elif self.bob_state_current == self.bob_motion.MOTION_RIGHT:
                 print('bobbed right last, bobbing back')
-                self.drone.anim(1, 1000)
+                #self.drone.anim(1, 1000)
                 self.bob_state_current = self.bob_motion.MOTION_BACK
             elif self.bob_state_current == self.bob_motion.MOTION_BACK:
                 print('bobbed back last, bobbing left')
-                self.drone.anim(3, 1000)
+                #self.drone.anim(3, 1000)
                 self.bob_state_current = self.bob_motion.MOTION_LEFT
 
             time.sleep(0.1)
             self.chill()
 
     def chill(self):
-        self.drone.hover()
+        #self.drone.hover()
         self.drone_state = self.drone_states.STATE_HOVER
 
