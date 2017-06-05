@@ -3,9 +3,9 @@ import wave
 import threading
 
 class play_song:
-    __current_time  = 0.0 # stores current time in seconds
-    __chunk_size    = 1024 # chunk size
-    __chunk_number  = 0 # the current chunk we're playing
+    __current_time  = 0.0   # stores current time in seconds
+    __chunk_size    = 1024  # chunk size
+    __chunk_number  = 0     # the current chunk we're playing
     __playing       = False # whether we're playing
 
     def __init__(self, filename):
@@ -41,7 +41,6 @@ class play_song:
             self.__current_time = (self.__chunk_size * (self.__chunk_number) + 0.0) / self.__file.getframerate()
             self.__chunk_number = self.__chunk_number + 1
             chunks = self.__file.readframes(self.__chunk_size)
-
 
         stream.stop_stream()
         stream.close()

@@ -42,51 +42,6 @@ dt = np.asarray(dt,dtype = float)
 #####################################################
 #                 MAIN LOOP                         #
 #####################################################
-#play song
-command_0_str = './playsong.sh'
-command_param = './music/' + filename
-# command_str = './music/playsong.sh ' + './music/' + filename + ' &>/dev/null'
-# print(command_str)
-# os.system(command_str)  #play sound asyncronously (i.e. in the background)
-
-
-
-f = wave.open(command_param,"rb")
-
-p = pyaudio.PyAudio()
-#open stream
-stream = p.open(format = p.get_format_from_width(f.getsampwidth()),
-                channels = f.getnchannels(),
-                rate = f.getframerate(),
-                output = True)
-#read data
-data = f.readframes(chunk)
-
-chunk_number = 0
-
-#play stream
-while data:
-    stream.write(data)
-    current_time = (chunk * (chunk_number) + 0.0)/f.getframerate()
-    chunk_number = chunk_number + 1
-    print('current time is %f' % current_time)
-    data = f.readframes(chunk)
-
-#stop stream
-stream.stop_stream()
-stream.close()
-
-#close PyAudio
-p.terminate()
-
-
-# proc = subprocess.Popen([command_0_str + ' ' + command_param], stdout=subprocess.PIPE, shell=True)
-# (out, err) = proc.communicate()
-#
-#
-# print(str(err))
-#
-# print "program output:", out
 
 
 # proc.kill()
