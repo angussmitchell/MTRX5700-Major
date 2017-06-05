@@ -10,12 +10,6 @@ class play_song:
 
     def __init__(self, filename):
         self.__file = wave.open(filename, "rb")
-        self.__pyaudio = pyaudio.PyAudio()
-        self.__stream = self.__pyaudio.open(format=self.__pyaudio.get_format_from_width(self.__file.getsampwidth()),
-                        channels=self.__file.getnchannels(),
-                        rate=self.__file.getframerate(),
-                        output=True)
-        self.__chunks = self.__file.readframes(self.__chunk_size)
 
     # returns the current time in seconds as a float
     def current_time(self):
@@ -30,16 +24,25 @@ class play_song:
     # stops playing audio
     def stop(self):
         self.__playing = False
-        self.__stream.stop_stream()
-        self.__stream.close()
-        self.__pyaudio.terminate()
         self.__audio_thread.join()
         print('Stopped playing audio')
 
     # worker for playing audio in a thread
     def __audio_worker(self):
-        while self.__chunks and self.__playing:
-            self.__stream.write(self.__chunks)
+        pyaudio_instance = pyaudio.PyAudio()
+        stream = pyaudio_instance.open(format=pyaudio_instance.get_format_from_width(self.__file.getsampwidth()),
+                        channels=self.__file.getnchannels(),
+                        rate=self.__file.getframerate(),
+                        output=True)
+        chunks = self.__file.readframes(self.__chunk_size)
+
+        while chunks and self.__playing:
+            stream.write(chunks)
             self.__current_time = (self.__chunk_size * (self.__chunk_number) + 0.0) / self.__file.getframerate()
             self.__chunk_number = self.__chunk_number + 1
-            self.__chunks = self.__file.readframes(self.__chunk_size)
+            chunks = self.__file.readframes(self.__chunk_size)
+
+
+        stream.stop_stream()
+        stream.close()
+        pyaudio_instance.terminate()

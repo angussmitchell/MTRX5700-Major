@@ -8,7 +8,7 @@ audio.start()
 
 for i in range(0, 1000):
     print('current time is %f' % audio.current_time())
-    time.sleep(0.01)
+    time.sleep(0.1)
 
 
 audio.stop()
