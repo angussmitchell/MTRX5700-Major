@@ -12,7 +12,7 @@ def cluster(data,samplerate = 44100):
     ## set up parameter
     num_features = 2
     num_coeficients = 15
-    chunk_size = 1024*50
+    chunk_size = 1024*10
     min_bin_freq = 7       #minimum number of samples to form a cluster
     print "cluster chunk size = " + str(float(chunk_size/samplerate)) + " seconds"
     num_chunks = len(data)/chunk_size-1
@@ -40,11 +40,6 @@ def cluster(data,samplerate = 44100):
     time = np.arange(0, num_chunks,dtype=float)*chunk_size / samplerate
 
     ##before we plot the features, we should sub sample to make plotting easier
-    # x1 = features[:,0]
-    # sub_x1 = x1[1::4]
-    # x2 = features[:, 1]
-    # sub_x2 = x2[1::4]
-    # sub_time = time[1::4]
     #
     #
     # # the following plots the feature space for manual cluster detection
@@ -63,18 +58,18 @@ def cluster(data,samplerate = 44100):
     n_clusters = len(unique_labels)                            #get the number of unique clusters
 
     print  str(n_clusters) + " clusters found"
-    #fig = plt.figure()
-    #ax = fig.add_subplot(111, projection='3d')
+    fig = plt.figure()
+    ax = fig.add_subplot(111, projection='3d')
 
     #plotting - a different colour for every cluster
-    # colours = "rgbyk"
-    # for k in range(0,n_clusters):
-    #     my_members = labels == k
-    #     colour_index = k%len(colours)
-    #     ax.scatter(features[my_members,0], features[my_members,1],time[my_members], c = colours[colour_index])
-    #     #plt.plot(cluster_center[0], cluster_center[1], 'o', markerfacecolor=col, markeredgecolor='k', markersize=14)
-    # plt.title('Calculate number of clusters = : %d' % n_clusters)
-    # plt.show()
+    colours = "rgbyk"
+    for k in range(0,n_clusters):
+         my_members = labels == k
+         colour_index = k%len(colours)
+         ax.scatter(features[my_members,0], features[my_members,1],time[my_members], c = colours[colour_index])
+         #plt.plot(cluster_center[0], cluster_center[1], 'o', markerfacecolor=col, markeredgecolor='k', markersize=14)
+    plt.title('Calculate number of clusters = : %d' % n_clusters)
+    plt.show()
 
 
 
