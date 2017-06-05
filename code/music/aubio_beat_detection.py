@@ -10,7 +10,7 @@ plt.close("all")
 win_s = 512                 # fft size
 hop_s = win_s // 2          # hop size
 
-filename = 'Angels  Airwaves - It Hurts (Audio Video).wav'
+filename = 'louis.wav'
 
 samplerate = 0
 

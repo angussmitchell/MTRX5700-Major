@@ -2,7 +2,7 @@ import scipy.io.wavfile as wavfile
 import numpy as np
 import matplotlib.pyplot as plt
 
-rate, raw_data = wavfile.read("music/3434162_Handzup_Motherfuckers_Extended_Mix.wav")
+rate, raw_data = wavfile.read("music/Angles.wav")
 
 raw_data = (raw_data[:,0]+raw_data[:,1])/2
 windowSize = 30            # 2 minutes

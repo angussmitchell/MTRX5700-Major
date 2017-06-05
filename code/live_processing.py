@@ -3,6 +3,7 @@ import sounddevice as sd
 import wave
 import aubio
 import numpy as np
+from RingBuffer import HistBuffer
 import matplotlib.pyplot as plt
 
 #####################################################
@@ -47,6 +48,33 @@ def get_beats(samples, samplerate = 44100):
     sum = np.nansum(samples)
     return sum
 
+#a homemade sound energy implementation
+def get_beats_se(samples, history, samplerate = 44100, threshold = 0, inst_threshold = 20):
+
+    #get history
+    buf = filter_array(history.data, 0,1)
+    buf = filter(None, buf)   #filter out none types
+    buf = np.asarray(buf)
+
+    surrounding_pow = np.sum(abs(buf))
+    instant_pow = np.sum(abs(samples))
+
+    #see if beat detected
+    if (instant_pow + threshold > surrounding_pow) & (instant_pow > inst_threshold):
+        return 1
+
+    return instant_pow
+
+
+def filter_array(array, low_val,high_val):
+    array = np.asarray(array)
+    low_values_indices = array < low_val  # Where values are low
+    high_values_indices = array > high_val
+    str_values_indices = array == str
+    array[low_values_indices] = 0  # All low values set to 0
+    array[high_values_indices] = 0
+    array[str_values_indices] = 0
+    return array
 #####################################################
 #       MAIN CODE                                   #
 #####################################################
@@ -69,16 +97,32 @@ stream = audio.open(format=format, channels=channels,
 
 print "recording..."
 
-#plt.ion()
+#create circular history buffer
+buf = HistBuffer(180,rate)                #setup RingBuf
+plt.ion()
 
 while(1):
 
     frames = get_chunk(frame_size = frame_size)
-    plt.clf()
-    plt.ylim([-3,3])
-    plt.plot(frames)
-    plt.pause(0.05)
-    print(get_beats(frames.reshape(len(frames))))
+
+    buf.append(np.ndarray.tolist(frames))  #append the frames to the circular buffer (converting to list)
+
+
+    #FOR PLOTTING
+
+    # plt.clf()
+    # plt.subplot(211)
+    # plt.ylim([0,1])
+    # toplot = np.asarray(buf.data)
+    # toplot = filter(None, toplot)   #filter out none values
+    # toplot = filter_array(toplot, -1,1)
+    # plt.plot(toplot)
+    # plt.subplot(212)
+    # plt.plot(frames,'r')
+    # plt.pause(0.05)
+
+    #print
+    print(get_beats_se(frames.reshape(len(frames)),history=buf))
 
 # stop Recording
 stream.stop_stream()
