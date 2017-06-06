@@ -96,6 +96,5 @@ with tf.Session() as sess:
         if epoch % display_step == 0:
             print("Epoch:", '%04d' % (epoch + 1),
                   "cost=", str(c))
-
     print("Optimization Finished!")
 

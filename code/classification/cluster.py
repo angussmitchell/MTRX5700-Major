@@ -8,17 +8,16 @@ from sklearn.cluster import MeanShift, estimate_bandwidth
 from mpl_toolkits.mplot3d import Axes3D
 from itertools import cycle
 
-def cluster(data,samplerate = 44100):
+def cluster(data,samplerate = 44100,num_coeficients = 40):
     ## set up parameter
     num_features = 2
-    num_coeficients = 15
-    chunk_size = 1024*10
-    min_bin_freq = 7       #minimum number of samples to form a cluster
+    chunk_size = 1024*2
+    min_bin_freq = 1     #minimum number of samples to form a cluster
     print "cluster chunk size = " + str(float(chunk_size/samplerate)) + " seconds"
     num_chunks = len(data)/chunk_size-1
     ceps = []
     features = np.zeros((num_chunks, num_coeficients))
-
+    quantile = 0.99       #determines the filter bandwidth
 
     ## start finding MFCC for the song chunks
     for i in range(0,len(data)/chunk_size-1):
@@ -37,8 +36,9 @@ def cluster(data,samplerate = 44100):
     pca = PCA(num_features)
     pca.fit(features)
     features = pca.transform(features)
-    time = np.arange(0, num_chunks,dtype=float)*chunk_size / samplerate
-
+    num_samples = len(features[:,0])
+    time = np.arange(0, num_samples,dtype=float)*chunk_size / samplerate
+    time = np.transpose(np.asarray(time)) * 50
     ##before we plot the features, we should sub sample to make plotting easier
     #
     #
@@ -47,6 +47,14 @@ def cluster(data,samplerate = 44100):
     # ax = fig.add_subplot(111, projection='3d')
     # ax.scatter(sub_x1,sub_x2,sub_time)
     # plt.show()
+
+
+    #add time into the feature list, because it is an important feature
+    combined_features = np.empty([num_samples, 3], dtype = float)
+    combined_features[:,0] = features[:,0]
+    combined_features[:,1] = features[:,1]
+    combined_features[:,2] = time
+    features = combined_features
 
     # Do MeanShift clustering
     bandwidth = estimate_bandwidth(features, quantile=0.3, n_samples=num_chunks)
