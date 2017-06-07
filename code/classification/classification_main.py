@@ -12,7 +12,7 @@ import matplotlib.pyplot as plt
 from cluster import cluster
 
 # read in raw data
-rate, raw_data = wavfile.read("../music/cannon.wav")
+rate, raw_data = wavfile.read("../music/Vegas.wav")
 data = (raw_data[:,0]/2.0+raw_data[:,1]/2.0)
 
 
