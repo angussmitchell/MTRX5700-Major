@@ -32,4 +32,3 @@ def clean_start():
     drone.mtrim()
     time.sleep(3)
     return drone
-
