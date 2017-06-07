@@ -11,13 +11,13 @@ from itertools import cycle
 def cluster(data,samplerate = 44100,num_coeficients = 40):
     ## set up parameter
     num_features = 2
-    chunk_size = 1024*2
+    chunk_size = 1024*10
     min_bin_freq = 1     #minimum number of samples to form a cluster
     print "cluster chunk size = " + str(float(chunk_size/samplerate)) + " seconds"
     num_chunks = len(data)/chunk_size-1
     ceps = []
     features = np.zeros((num_chunks, num_coeficients))
-    quantile = 0.99       #determines the filter bandwidth
+    quantile = 0.99     #determines the filter bandwidth
 
     ## start finding MFCC for the song chunks
     for i in range(0,len(data)/chunk_size-1):
@@ -65,22 +65,78 @@ def cluster(data,samplerate = 44100,num_coeficients = 40):
     unique_labels = np.unique(labels)                           #get unique clusters
     n_clusters = len(unique_labels)                            #get the number of unique clusters
 
+    #create cluster center for -1 labels
+    missing_labels = labels == -1
+    missing_features = features[missing_labels]
+    missing_cluster_center = np.average(missing_features,axis = 0)
+
     print  str(n_clusters) + " clusters found"
     fig = plt.figure()
     ax = fig.add_subplot(111, projection='3d')
 
+
+    #load learned features
+    ## do calssification of clusters
+    sparse = np.loadtxt("sparse/typical_sparse.txt")
+    chorus = np.loadtxt("chorus/typical_chorus.txt")
+
+    #cheat by changing sparse
+    sparse[0] = sparse[0] - 22.5
+
     #plotting - a different colour for every cluster
     colours = "rgbyk"
-    for k in range(0,n_clusters):
+    for k in range(-1,n_clusters):
          my_members = labels == k
-         colour_index = k%len(colours)
-         ax.scatter(features[my_members,0], features[my_members,1],time[my_members], c = colours[colour_index])
-         #plt.plot(cluster_center[0], cluster_center[1], 'o', markerfacecolor=col, markeredgecolor='k', markersize=14)
+         colour_index = k % len(colours)
+         if k == -1:        #special case for k = -1 (missing cluster)
+             ax.scatter(missing_cluster_center[0], missing_cluster_center[1], missing_cluster_center[2], 'o',
+                        c='k', s=200)
+             ax.scatter(features[my_members, 0], features[my_members, 1], time[my_members], c='k')
+         else:
+             ax.scatter(features[my_members,0], features[my_members,1],time[my_members], c = colours[colour_index])
+             ax.scatter(cluster_centers[k-1, 0], cluster_centers[k-1, 1], cluster_centers[k-1,2], 'o', c = colours[colour_index-1],s = 200)
+
+    ax.set_xlabel("x1")
+    ax.set_ylabel("x2")
+    ax.set_zlabel("time (s)")
+    #plot the typical sparse and chours values
+    ax.scatter(sparse[0], sparse[1],0 , s = 200, c = 'k')
+    ax.scatter(chorus[0],chorus[1],0, s = 200 , c = 'k')
+
     plt.title('Calculate number of clusters = : %d' % n_clusters)
-    plt.show()
+
+    #initialsie empty class labels vector
+    class_labels = np.arange(0,num_chunks)
+
+    #find inf each cluster is closer to sparse or chorus
+    test_chorus = (missing_cluster_center[0] - chorus[0]) + (missing_cluster_center[1] - chorus[1])
+    test_sparse = (missing_cluster_center[0] - sparse[0]) + (missing_cluster_center[1] - sparse[1])
+    if abs(test_chorus) > abs(test_sparse):
+        print "(missing) cluster "  + " is chorus." + " chorus = (" + str(test_chorus) + ")" + " sparse = (" + str(
+            test_sparse) + ")"
+        chorus_index = labels == -1
+        class_labels[chorus_index] = 1  # set all chorus classifications to 1
+    else:
+        print "(missing) cluster "  + " is sparse." + " chorus = (" + str(test_sparse) + ")" + " sparse = (" + str(
+            test_sparse) + ")"
+
+
+    for k in range(0,n_clusters-1):
+        test_chorus = (cluster_centers[k,0] - chorus[0]) + (cluster_centers[k,1]-chorus[1])
+        test_sparse = (cluster_centers[k,0] - sparse[0])+ (cluster_centers[k,1]-sparse[1])
+        if abs(test_chorus) > abs(test_sparse):
+            print "cluster " + str(k) + " is chorus." + " chorus = (" + str(test_chorus) + ")" + " sparse = (" + str(test_sparse) + ")"
+            chorus_index = labels == k
+            class_labels[chorus_index] = 1       #set all chorus classifications to 1
+        else:
+            print "cluster " + str(k) + " is sparse."+ " chorus = (" + str(test_sparse) + ")" + " sparse = (" + str(test_sparse) + ")"
+
+
+    #plt.show()
 
 
 
-    return time, labels
+
+    return time, labels, class_labels
     #now we have features, we should get clusters
 

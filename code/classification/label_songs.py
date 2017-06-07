@@ -9,12 +9,8 @@
 import scipy.io.wavfile as wavfile
 import numpy as np
 import matplotlib.pyplot as plt
-from cluster import cluster
 from scikits.talkbox.features import mfcc
-from sklearn.decomposition import PCA
-from sklearn.cluster import MeanShift, estimate_bandwidth
-from mpl_toolkits.mplot3d import Axes3D
-from itertools import cycle
+
 
 
 features = np.empty([1,40])      #initialise feature vector
@@ -57,9 +53,8 @@ features = np.concatenate((features,local_features),axis = 0)
 
 #load other
 loaded_features = np.loadtxt("chorus/chorus.txt")
-
 features = np.concatenate((loaded_features,features),axis = 0)
 
-output_folder = "sparse/"
-output_filename = output_folder + "sparse.txt"
+output_folder = "chorus/"
+output_filename = output_folder + "chorus.txt"
 np.savetxt(output_filename,features)
