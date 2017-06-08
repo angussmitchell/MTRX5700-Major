@@ -1,8 +1,8 @@
 import numpy as np
 from sklearn.decomposition import PCA
 
-sparse = np.loadtxt("rock_chill/rock_chill.txt")
-chorus = np.loadtxt("rock_chorus/chorus.txt")
+sparse = np.loadtxt("neillversion/rock_chill/rock_chill.txt")
+chorus = np.loadtxt("neillversion/rock_chorus/chorus.txt")
 
 ## Perform PCA on chorus
 pca = PCA(2)
