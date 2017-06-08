@@ -52,22 +52,6 @@ drone.trim()                # Recalibrate sensors
 drone.getSelfRotation(5)    # Auto-alteration-value of gyroscope-sensor
 print "Auto-alternation: " + str(drone.selfRotation) + "deg/sec"
 
-## check to see if vision is actually enabled
-if drone.State[1] == 1:
-    print "Video: enabled"
-else:
-    print "Video: disabled"
-
-if drone.State[2] == 1:
-    print "Vision: enabled"
-else:
-    print "Vision: disabled"
-
-if drone.State[7] == 1:
-    print "Camera: ready"
-else:
-    print "Camera: not ready"
-
 ## main program
 
 # check what data packages are being sent/received
@@ -86,29 +70,33 @@ drone.mtrim()
 print "mtrim"
 boots.wait_nav(drone, 3.0)
 
-drone.moveUp(0.5)
+drone.moveUp(0.1)
 print "move up"
-boots.wait_nav(drone, 2)
+boots.wait_nav(drone, 1.0)
 
-drone.anim(0,1000)
-print "anim 0"
-boots.wait_nav(drone, 0.5)
-
-drone.anim(1,1000)
-print "anim 1"
-boots.wait_nav(drone, 0.5)
-
-drone.anim(2,1000)
-print "anim 2"
-boots.wait_nav(drone, 0.5)
-
-drone.anim(3,1000)
-print "anim 3"
-boots.wait_nav(drone, 0.5)
-
-drone.moveDown(1)
-print "move down"
-boots.wait_nav(drone, 3)
+drone.moveForward(0.05)
+print "move forward"
+boots.wait_nav(drone, 10.0)
+#
+#drone.anim(0,1000)
+#print "anim 0"
+#boots.wait_nav(drone, 0.5)
+#
+#drone.anim(1,1000)
+#print "anim 1"
+#boots.wait_nav(drone, 0.5)
+#
+#drone.anim(2,1000)
+#print "anim 2"
+#boots.wait_nav(drone, 0.5)
+#
+#drone.anim(3,1000)
+#print "anim 3"
+#boots.wait_nav(drone, 0.5)
+#
+#drone.moveDown(1)
+#print "move down"
+#boots.wait_nav(drone, 3)
 
 drone.stop()
 print "stop"
