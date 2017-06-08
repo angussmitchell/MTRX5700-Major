@@ -1,9 +1,8 @@
 import numpy as np
 from sklearn.decomposition import PCA
 
-sparse = np.loadtxt("sparse/sparse.txt")
-chorus = np.loadtxt("chorus/chorus.txt")
-
+sparse = np.loadtxt("rock_chill/rock_chill.txt")
+chorus = np.loadtxt("rock_chorus/chorus.txt")
 
 ## Perform PCA on chorus
 pca = PCA(2)
@@ -21,5 +20,5 @@ chorus = np.transpose(np.average(chorus, axis = 0))
 
 
 
-np.savetxt("sparse/typical_sparse.txt",sparse)
-np.savetxt("chorus/typical_chorus.txt",chorus)
+np.savetxt("sparse/typical_rock_sparse.txt",sparse)
+np.savetxt("chorus/typical_rock_chorus.txt",chorus)
