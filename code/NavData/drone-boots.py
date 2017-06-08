@@ -27,7 +27,7 @@ print "Battery: "+str(drone.getBattery()[0])+"%  "+str(drone.getBattery()[1]) # 
 ## set mode of data packages
 drone.useDemoMode(False)
 drone.getNDpackage(["demo", "time", "altitude", "magneto", "vision_detect"])         # Packets, which shall be decoded
-time.sleep(1.0)
+time.sleep(1.5)
 
 ## set maximum altitude
 CDC = drone.ConfigDataCount
@@ -59,7 +59,8 @@ if drone.State[10] == 0:
     print "Navdata: all"
 else:
     print "Navdata: demo. dumb drone"
-    drone.useDemoMode(demo_mode)
+    drone.useDemoMode(False)
+    time.sleep(2.0)
 
 drone.takeoff()
 print "Takeoff"
@@ -70,13 +71,13 @@ drone.mtrim()
 print "mtrim"
 boots.wait_nav(drone, 3.0)
 
-drone.moveUp(0.1)
+drone.moveUp(0.5)
 print "move up"
 boots.wait_nav(drone, 1.0)
 
-drone.moveForward(0.05)
+drone.moveForward(0.15)
 print "move forward"
-boots.wait_nav(drone, 20.0)
+boots.wait_nav(drone, 30.0)
 #
 #drone.anim(0,1000)
 #print "anim 0"
