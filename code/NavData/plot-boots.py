@@ -44,10 +44,17 @@ if plot_vision == True:
     plt.legend(loc='upper right')
     plt.grid(True)
     plt.xlabel("Time (s)")
-
+    
     plt.title("Oriented Marker Detections")
     plt.xlabel("Time (s)")
-
+    fig_ind = fig_ind + 1
+    
+    plt.figure(fig_ind)
+    plt.plot(x, detect_rot,'g')
+    plt.grid(True)
+    plt.title("Orientation")
+    plt.xlabel("Time (s)")
+    
     fig_ind = fig_ind + 1
 
 if plot_altitude == True:
@@ -57,7 +64,6 @@ if plot_altitude == True:
     plt.plot(x, altitude_ref,'g', label = "altitude (altitude ref)")
     plt.legend(loc='upper right')
     plt.grid(True)
-    plt.xlabel("Time (s)")
     plt.title("Altitude Measurements")
     plt.xlabel("Time (s)")
     
