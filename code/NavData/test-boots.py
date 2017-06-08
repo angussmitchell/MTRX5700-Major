@@ -74,9 +74,14 @@ boots.wait_nav(drone, 3.0)
 #start = time.time()
 #while (time.time() - start) < 3.0:
 #    drone.anim(6, 5000)
-drone.turnLeft(1.0)
-print "turn left"
-boots.wait_nav(drone, 6.0)
+
+#drone.turnLeft(1.0)
+#print "turn left"
+#boots.wait_nav(drone, 6.0)
+
+drone.move(-0.15, -0.12, 0.0, 0.0)
+boots.wait_nav(drone, 1.0)
+print
 
 drone.stop()
 print "stop"
