@@ -15,7 +15,7 @@ def show_plot():
     global g_plot
     g_plot.show()
 
-def cluster(data,samplerate = 44100,num_coeficients = 40, show_plots = False):
+def cluster(data,samplerate = 44100,num_coeficients = 40, show_plots = False, rock_flag = 0):
     ## set up parameter
     num_features = 2
     chunk_size = 1024*10
@@ -85,8 +85,13 @@ def cluster(data,samplerate = 44100,num_coeficients = 40, show_plots = False):
 
     #load learned features
     ## do calssification of clusters
-    sparse = np.loadtxt("../classification/sparse/typical_sparse.txt")
-    chorus = np.loadtxt("../classification/chorus/typical_chorus.txt")
+    if rock_flag:
+        sparse = np.loadtxt("../classification/sparse/typical_rock_sparse.txt")
+        chorus = np.loadtxt("../classification/chorus/typical_rock_chorus.txt")
+    else:
+        sparse = np.loadtxt("../classification/sparse/typical_sparse.txt")
+        chorus = np.loadtxt("../classification/chorus/typical_chorus.txt")
+
 
     #cheat by changing sparse
     sparse[0] = sparse[0] - 22.5
