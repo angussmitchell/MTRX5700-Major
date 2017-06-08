@@ -58,17 +58,25 @@ def wait_nav(drone, time_s):
             sys.exit("exited program")
     
         if drone.NavData["vision_detect"][0] > 0:
-            print "detected tag, telling drone to stop and land"
-            rot = drone.NavData["vision_detect"][7][0]
-            
-            
             drone.stop()
-            print "stop"
-            time.sleep(0.5)
-            drone.land()
-            save_nav()
-            sys.exit("exited program")
-    
+            time.sleep(2.0)
+            print "detected tag, telling drone to stop and land"
+            alpha = drone.NavData["vision_detect"][7][0]
+            beta = 180.0 - alpha
+            if beta == 180.0:
+                beta = beta + 0.1
+            drone.turnAngle(beta,0.25)
+            time.sleep(2.0)
+#            drone.moveForward(0.1)
+#            time.sleep(2.0)
+
+#            drone.stop()
+#            print "stop"
+#            time.sleep(0.5)
+#            drone.land()
+#            save_nav()
+#            sys.exit("exited program")
+
         while drone.NavDataCount == NDC:  time.sleep(0.001)                       # Wait until next time-unit
         NDC = drone.NavDataCount
         append_nav(drone)

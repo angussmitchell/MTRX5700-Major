@@ -76,7 +76,7 @@ boots.wait_nav(drone, 1.0)
 
 drone.moveForward(0.05)
 print "move forward"
-boots.wait_nav(drone, 10.0)
+boots.wait_nav(drone, 20.0)
 #
 #drone.anim(0,1000)
 #print "anim 0"
