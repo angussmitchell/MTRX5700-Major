@@ -45,9 +45,9 @@ plt.xlabel("Time (s)")
 plt.show()
 
 plt.figure(2)
+plt.plot(x, detect_n)
 
-plt.subplot(211)
-
+plt.show()
 
 ##
 
