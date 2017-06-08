@@ -49,10 +49,22 @@ def append_nav(drone):
     mx.append(drone.NavData["magneto"][0][0])
     my.append(drone.NavData["magneto"][0][1])
     mz.append(drone.NavData["magneto"][0][2])
+    pwm_fl.append(drone.NavData["pwm"][0][0])
+    pwm_fr.append(drone.NavData["pwm"][0][1])
+    pwm_br.append(drone.NavData["pwm"][0][2])
+    pwm_bl.append(drone.NavData["pwm"][0][3])
     altitude_ref.append(drone.NavData["altitude"][3])   # altitude in mm
     detect_n.append(drone.NavData["vision_detect"][0])      # number of markers detected
-    detect_dist.append(drone.NavData["vision_detect"][6][0])
-    detect_ang.append(drone.NavData["vision_detect"][7][0])
+    if detect_n[-1] > 0:
+        print "detected tag"
+    detect_type.append(drone.NavData["vision_detect"][1])   # types of detected markers
+    detect_x.append(drone.NavData["vision_detect"][2])
+    detect_y.append(drone.NavData["vision_detect"][3])
+    detect_width.append(drone.NavData["vision_detect"][4])
+    detect_depth.append(drone.NavData["vision_detect"][5])
+    detect_dist.append(drone.NavData["vision_detect"][6])
+    detect_ang.append(drone.NavData["vision_detect"][7])
+    detect_rot.append(drone.NavData["vision_detect"][9])
     return
 
 ## receive navdata packet
@@ -68,4 +80,3 @@ def wait_nav(drone, time_s):
 def save_nav():
     with open('navdata-vars.pickle', 'w') as f:  # Python 3: open(..., 'wb')
         pickle.dump([pitch, roll, yaw, demo_alt, vx, vy, vz, nav_time, mx, my, mz, pwm_fl, pwm_fr, pwm_br, pwm_bl, detect_n, detect_type, detect_x, detect_y, detect_width, detect_depth, detect_dist, detect_ang, detect_rot, checksum], f)
-    print "saved navdata"

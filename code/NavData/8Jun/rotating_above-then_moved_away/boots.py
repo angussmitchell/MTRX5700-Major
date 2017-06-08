@@ -49,10 +49,20 @@ def append_nav(drone):
     mx.append(drone.NavData["magneto"][0][0])
     my.append(drone.NavData["magneto"][0][1])
     mz.append(drone.NavData["magneto"][0][2])
+    pwm_fl.append(drone.NavData["pwm"][0][0])
+    pwm_fr.append(drone.NavData["pwm"][0][1])
+    pwm_br.append(drone.NavData["pwm"][0][2])
+    pwm_bl.append(drone.NavData["pwm"][0][3])
     altitude_ref.append(drone.NavData["altitude"][3])   # altitude in mm
     detect_n.append(drone.NavData["vision_detect"][0])      # number of markers detected
+    detect_type.append(drone.NavData["vision_detect"][1][0])   # types of detected markers
+    detect_x.append(drone.NavData["vision_detect"][2][0])
+    detect_y.append(drone.NavData["vision_detect"][3][0])
+    detect_width.append(drone.NavData["vision_detect"][4][0])
+    detect_depth.append(drone.NavData["vision_detect"][5][0])
     detect_dist.append(drone.NavData["vision_detect"][6][0])
     detect_ang.append(drone.NavData["vision_detect"][7][0])
+    detect_rot.append(drone.NavData["vision_detect"][9][0])
     return
 
 ## receive navdata packet
