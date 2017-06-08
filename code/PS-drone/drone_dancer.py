@@ -18,10 +18,11 @@ class drone_dancer:
 
     # dance move class for queue
     class dance_move:
-        def __init__(self, move_type = 1, duration = 1.0, frequency = 2.0):
+        def __init__(self, move_type = 1, duration = 1.0, frequency = 2.0, delay = 0.0):
             self.move_type = move_type # move type, from dance_moves class
             self.duration  = duration # duration in seconds
             self.frequency = frequency
+            self.delay = 0.0
 
 
     class dance_moods:
@@ -58,10 +59,12 @@ class drone_dancer:
         MOVE_QUICK_BOB      = 10 # single bob like in ardrone demo
         MOVE_BOB_CLOCKWISE  = 11 # automatically bobs in the next direction, forward, back, left, right
         MOVE_BOB_FBLR       = 12 # front back left right bob
-        MOVE_BOX_LFRB       = 13 # moves in a box, left -> forwards -> right -> back
-        MOVE_BOX_WITH_BOB   = 14 # todo box with bob in opposite direction to where we're going next
-        MOVE_HEIGHT_CHANGE  = 15
-        MOVE_SPIN_CLOCKWISE = 16
+        MOVE_BOB_FB         = 13 # bobs back and forward
+        MOVE_BOX_LFRB       = 14 # moves in a box, left -> forwards -> right -> back
+        MOVE_BOX_WITH_BOB   = 15 # todo box with bob in opposite direction to where we're going next
+        MOVE_HEIGHT_CHANGE  = 16
+        MOVE_SPIN_CLOCKWISE = 17
+        MOVE_SPIN_CLOCKWISE_UP = 18
 
     # the current move we're doing
     current_move = dance_moves.MOVE_NONE
@@ -127,14 +130,22 @@ class drone_dancer:
     # should be called on the beat, automatically selects a dance move, drone should be dancing
     def auto_dance(self, duration = 1.0):
         print('beat count %d' % self.__current_beat_count)
+
+        # ignore adding moves if we're already doing a move
+        if self.move_queue.qsize() > 0:
+            return
+
         if self.__current_dance_mood == self.dance_moods.MOOD_CHILL:
-            self.enqueue_move(self.dance_moves.MOVE_FIGURE_EIGHT, duration)
+            print('auto dance - chill')
+            # self.enqueue_move(self.dance_moves.MOVE_FIGURE_EIGHT, duration)
+            self.enqueue_move(self.dance_moves.MOVE_BOX_LFRB, duration)
         elif self.__current_dance_mood == self.dance_moods.MOOD_GO_HARD:
-            print('beat - going hard!')
-            if self.__current_beat_count < 8:
-                self.enqueue_move(self.dance_moves.MOVE_BOB_CLOCKWISE, 0.15)
-            elif self.__current_beat_count > 8:
-                self.enqueue_move(self.dance_moves.MOVE_BOB_FBLR, 0.15)
+            print('auto dance - going hard!')
+            self.enqueue_move(self.dance_moves.MOVE_BOB_FB, 0.15)
+            # if self.__current_beat_count < 8:
+            #     self.enqueue_move(self.dance_moves.MOVE_BOB_CLOCKWISE, 0.15)
+            # elif self.__current_beat_count > 8:
+            #     self.enqueue_move(self.dance_moves.MOVE_BOB_FBLR, 0.15)
             # elif self.__current_beat_count == 14:
             #     self.enqueue_move(self.dance_moves.MOVE_FLIP, 0.5)
 
@@ -156,9 +167,9 @@ class drone_dancer:
         return self.drone_state != self.drone_states.STATE_CALIBRATING
 
     # adds a move to the drone's queue
-    def enqueue_move(self, move_type, duration, frequency = 0.0):
+    def enqueue_move(self, move_type, duration, frequency = 0.0, delay = 0.0):
         print('enqueued move number ' + str(move_type) + ' with duration ' + str(duration) + ', frequency ' + str(frequency))
-        self.move_queue.put(self.dance_move(move_type, duration, frequency))
+        self.move_queue.put(self.dance_move(move_type, duration, frequency, delay))
 
     # worker function that reads moves from the move queue and dances accordingly
     def __dance_worker(self):
@@ -198,11 +209,14 @@ class drone_dancer:
 
     # do_move wrapper todo just change do_move to this
     def __do_move(self, dance_move):
-        self.do_move(dance_move.move_type, dance_move.duration, dance_move.frequency)
+        self.do_move(dance_move.move_type, dance_move.duration, dance_move.frequency, dance_move.delay)
 
     # bust a move! # todo currently no way to set speed, only duration - you can use ps drone setspeed for now
-    def do_move(self, move_type, duration=1.0, frequency=2.5):  # todo fix sleep related errors
+    def do_move(self, move_type, duration=1.0, frequency=2.5, delay=0.0):  # todo fix sleep related errors
         self.drone_state = self.drone_states.STATE_DANCING
+
+        if delay > 0.0:
+            time.sleep(delay)
 
         if move_type == self.dance_moves.MOVE_NONE:
             self.drone_state = self.drone_states.STATE_HOVER
@@ -346,10 +360,29 @@ class drone_dancer:
 
             time.sleep(0.1)
             self.chill()
+            if duration > 0.1:
+                time.sleep(duration - 0.1)
+
+        elif move_type == self.dance_moves.MOVE_BOB_FB:
+            print('fb bob!')
+            if self.bob_state_current != self.bob_motion.MOTION_FORWARD:
+                print('bobbing forward')
+                self.drone.anim(2, 1000)
+                self.bob_state_current = self.bob_motion.MOTION_FORWARD
+            else:
+                print('bobbing back')
+                self.drone.anim(3, 1000)
+                self.bob_state_current = self.bob_motion.MOTION_BACK
+
+            time.sleep(0.1)
+            self.chill()
+            if duration > 0.1:
+                time.sleep(duration - 0.1)
+
 
         elif move_type == self.dance_moves.MOVE_BOX_LFRB:
             print('fblr BOX!')
-            move_speed = 0.2
+            move_speed = 0.1
             if self.current_box_motion == self.box_motion.MOTION_BACK \
                     or self.current_box_motion == self.box_motion.MOTION_NONE:
                 print('no box motion, going left')
@@ -372,6 +405,10 @@ class drone_dancer:
             self.chill()
 
         elif move_type == self.dance_moves.MOVE_SPIN_CLOCKWISE:
+            self.drone.move(0.0, 0.0, 0.0, 1.0)
+            time.sleep(duration)
+
+        elif move_type == self.dance_moves.MOVE_SPIN_CLOCKWISE_UP:
             self.drone.move(0.0, 0.0, 0.2, 1.0)
             time.sleep(duration)
 

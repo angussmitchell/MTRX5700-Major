@@ -1,13 +1,24 @@
 from play_song import play_song
 import time
 #
-audio = play_song('./music/FasterFurther.wav')
+
+
+def beat_hook():
+    print('meat hook')
+
+audio = play_song('./music/AllForNothing.wav')
 
 audio.start()
 
-for i in range(0, 100):
-    print('current time is %f' % audio.current_time())
-    time.sleep(0.1)
+
+audio.set_beat_event(beat_hook)
+
+# for i in range(0, 100):
+#     # print('current time is %f' % audio.current_time())
+#     print('bpm is %f' % audio.current_bpm())
+#     time.sleep(0.1)
+
+time.sleep(100)
 
 
 audio.stop()

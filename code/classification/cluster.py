@@ -15,7 +15,7 @@ def show_plot():
     global g_plot
     g_plot.show()
 
-def cluster(data,samplerate = 44100,num_coeficients = 40):
+def cluster(data,samplerate = 44100,num_coeficients = 40, show_plots = False):
     ## set up parameter
     num_features = 2
     chunk_size = 1024*10
@@ -146,7 +146,8 @@ def cluster(data,samplerate = 44100,num_coeficients = 40):
     global g_plot
     g_plot = plt
 
-    plt.show()
+    if show_plots:
+        plt.show()
     # my_thread = threading.Thread(target=show_plot)
     # my_thread.start()
 
