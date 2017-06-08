@@ -30,7 +30,7 @@ flipped = False
 # filename = '../music/actionclip.wav'
 # filename = '../music/heroinclip.wav'
 
-filename = '../music/Nothing.wav'
+filename = '../music/Forbidden.wav'
 
 rate, raw_data = wavfile.read(filename)
 data = (raw_data[:, 0] / 2.0 + raw_data[:, 1] / 2.0)
