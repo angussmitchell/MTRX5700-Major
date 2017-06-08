@@ -13,6 +13,8 @@ class play_song:
     __beat_times    = []
     __beat_event    = None
 
+    onsets          = []
+
     def __init__(self, filename):
         self.__file = wave.open(filename, "rb")
 
@@ -24,9 +26,18 @@ class play_song:
         samplerate = s.samplerate
         o = aubio.tempo("default", win_s, hop_s, samplerate)
 
+        onset = aubio.onset("default", win_s, hop_s, samplerate)
+
+
+        o.set_delay(100)
+
         total_frames = 0
         while True:
             samples, read = s()
+
+            os = onset(samples)
+            if os:
+                self.onsets.append(onset.get_last() / float(samplerate))
 
             is_beat = o(samples)
             if is_beat:

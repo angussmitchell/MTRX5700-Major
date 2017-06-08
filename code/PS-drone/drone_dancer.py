@@ -24,6 +24,16 @@ class drone_dancer:
             self.frequency = frequency
 
 
+    class dance_moods:
+        MOOD_CHILL     = 0
+        MOOD_GO_HARD   = 1
+
+    __current_dance_mood = dance_moods.MOOD_GO_HARD
+
+    # stores the current beat count for move determination, e.g. every 8 beats change dance style
+    __current_beat_count = 0
+
+
     # not sure if we need this - code is sequential anyway but I'll leave it in for now
     class drone_states:
         STATE_LANDED        = 0
@@ -47,10 +57,26 @@ class drone_dancer:
         MOVE_SPIRAL_DOWN    = 9  # todo spiral down
         MOVE_QUICK_BOB      = 10 # single bob like in ardrone demo
         MOVE_BOB_CLOCKWISE  = 11 # automatically bobs in the next direction, forward, back, left, right
-        MOVE_BOB_FBLR       = 12
+        MOVE_BOB_FBLR       = 12 # front back left right bob
+        MOVE_BOX_LFRB       = 13 # moves in a box, left -> forwards -> right -> back
+        MOVE_BOX_WITH_BOB   = 14 # todo box with bob in opposite direction to where we're going next
+        MOVE_HEIGHT_CHANGE  = 15
+        MOVE_SPIN_CLOCKWISE = 16
 
     # the current move we're doing
     current_move = dance_moves.MOVE_NONE
+
+
+    # possible box motion states
+    class box_motion:
+        MOTION_NONE     = 0
+        MOTION_FORWARD  = 1
+        MOTION_LEFT     = 2
+        MOTION_RIGHT    = 3
+        MOTION_BACK     = 4
+
+    current_box_motion = box_motion.MOTION_NONE
+
 
     # possible bob motion states
     class bob_motion:
@@ -97,6 +123,34 @@ class drone_dancer:
         self.drone_state = self.drone_states.STATE_LANDED
         self.drone.land()
 
+
+    # should be called on the beat, automatically selects a dance move, drone should be dancing
+    def auto_dance(self, duration = 1.0):
+        print('beat count %d' % self.__current_beat_count)
+        if self.__current_dance_mood == self.dance_moods.MOOD_CHILL:
+            self.enqueue_move(self.dance_moves.MOVE_FIGURE_EIGHT, duration)
+        elif self.__current_dance_mood == self.dance_moods.MOOD_GO_HARD:
+            print('beat - going hard!')
+            if self.__current_beat_count < 8:
+                self.enqueue_move(self.dance_moves.MOVE_BOB_CLOCKWISE, 0.15)
+            elif self.__current_beat_count > 8:
+                self.enqueue_move(self.dance_moves.MOVE_BOB_FBLR, 0.15)
+            # elif self.__current_beat_count == 14:
+            #     self.enqueue_move(self.dance_moves.MOVE_FLIP, 0.5)
+
+
+        self.__current_beat_count = (self.__current_beat_count + 1) % 16
+
+
+    def set_mood(self, mood = dance_moods.MOOD_GO_HARD):
+        self.__current_dance_mood = mood
+
+    def mood(self):
+        return self.__current_dance_mood
+
+    def reset_beat_count(self):
+        self.__current_beat_count = 0
+
     # returns whether the drone is ready to do dance moves
     def ready(self):
         return self.drone_state != self.drone_states.STATE_CALIBRATING
@@ -123,6 +177,7 @@ class drone_dancer:
             self.__dance_thread = threading.Thread(target=self.__dance_worker)
             self.__dancing = True
             self.__dance_thread.start() # start the dancer worker function
+            self.reset_beat_count() # reset the beat count
         else:
             print('already dancing')
 
@@ -138,7 +193,7 @@ class drone_dancer:
             print('Stopped dancing')
 
     # converts a bpm to a frequency in Hz
-    def __bpm_to_frequency(self, bpm = 128.0):
+    def bpm_to_frequency(self, bpm = 128.0):
         return float(bpm)/60.0
 
     # do_move wrapper todo just change do_move to this
@@ -207,17 +262,23 @@ class drone_dancer:
         elif move_type == self.dance_moves.MOVE_FIGURE_EIGHT:
             print('figure 8!')
             self.drone.move(0.0, 0.0, 0.5, 1.0)
-            time.sleep(1.1)
+            # time.sleep(1.1)
+            time.sleep(duration/7.0)
             self.drone.move(0.0, 0.0, 0.0, 1.0)
-            time.sleep(0.3)
+            time.sleep(duration/14.0)
+            # time.sleep(0.3)
             self.drone.move(0.0, 0.0, -0.25, 1.0)
-            time.sleep(2)
+            time.sleep(2*duration/7.0)
+            # time.sleep(2)
             self.drone.move(0.0, 0.0, 0.75, 1.0)
-            time.sleep(1.1)
+            # time.sleep(1.1)
+            time.sleep(duration/7.0)
             self.drone.move(0.0, 0.0, 0.0, 1.0)
-            time.sleep(0.3)
+            time.sleep(duration/14.0)
+            # time.sleep(0.3)
             self.drone.move(0.0, 0.0, -0.25, 1.0)
-            time.sleep(2)
+            # time.sleep(2)
+            time.sleep(2*duration/7.0)
             self.chill()
 
         elif move_type == self.dance_moves.MOVE_QUICK_BOB: # todo use anim instead
@@ -258,8 +319,10 @@ class drone_dancer:
                 self.drone.anim(3, 1000)
                 self.bob_state_current = self.bob_motion.MOTION_LEFT
 
-            time.sleep(0.1)
+            time.sleep(0.1) # todo send heaps of these for a funky hoola effect
             self.chill()
+            if duration > 0.1:
+                time.sleep(duration - 0.1)
 
         elif move_type == self.dance_moves.MOVE_BOB_FBLR:
             print('fblr bob!')
@@ -283,6 +346,35 @@ class drone_dancer:
 
             time.sleep(0.1)
             self.chill()
+
+        elif move_type == self.dance_moves.MOVE_BOX_LFRB:
+            print('fblr BOX!')
+            move_speed = 0.2
+            if self.current_box_motion == self.box_motion.MOTION_BACK \
+                    or self.current_box_motion == self.box_motion.MOTION_NONE:
+                print('no box motion, going left')
+                self.drone.moveLeft(move_speed)
+                self.current_box_motion = self.box_motion.MOTION_LEFT
+            elif self.current_box_motion == self.box_motion.MOTION_LEFT:
+                print('boxed left last, moving forward')
+                self.drone.moveForward(move_speed)
+                self.current_box_motion = self.box_motion.MOTION_FORWARD
+            elif self.current_box_motion == self.box_motion.MOTION_FORWARD:
+                print('boxed forward last, moving right')
+                self.drone.moveRight(move_speed)
+                self.current_box_motion = self.box_motion.MOTION_RIGHT
+            elif self.current_box_motion == self.box_motion.MOTION_RIGHT:
+                print('boxed right last, moving back')
+                self.drone.moveBackward(move_speed)
+                self.current_box_motion = self.box_motion.MOTION_BACK
+
+            time.sleep(duration - 0.01)
+            self.chill()
+
+        elif move_type == self.dance_moves.MOVE_SPIN_CLOCKWISE:
+            self.drone.move(0.0, 0.0, 0.2, 1.0)
+            time.sleep(duration)
+
 
     def chill(self):
         self.drone.hover()

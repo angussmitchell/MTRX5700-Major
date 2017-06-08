@@ -10,17 +10,17 @@ def hook():
     if audio.current_time() > 8.0:
         global beat_num, flipped
 
-        if beat_num == 7:
-            dancer.enqueue_move(dancer.dance_moves.MOVE_FLIP, audio.current_beat_s() - 0.01)
-        elif beat_num < 8:
+        # if beat_num == 7:
+        #     dancer.enqueue_move(dancer.dance_moves.MOVE_FLIP, audio.current_beat_s() - 0.01)
+        if beat_num < 8:
             dancer.enqueue_move(dancer.dance_moves.MOVE_BOB_CLOCKWISE, audio.current_beat_s())
         else:
             dancer.enqueue_move(dancer.dance_moves.MOVE_BOB_FBLR, 0.1)
 
         beat_num = beat_num + 1
 
-    elif audio.current_time() > 7.5 and flipped == False:
-        dancer.do_move(dancer.enqueue_move(dancer.dance_moves.MOVE_FLIP, 1.1))
+    elif audio.current_time() > 7.0 and flipped == False:
+        dancer.enqueue_move(dancer.dance_moves.MOVE_FLIP, 1.1)
         dancer.start_dancing()
         flipped = True
 
