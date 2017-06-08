@@ -4,6 +4,7 @@ import pyaudio
 import time
 import numpy
 from Queue import Queue
+from cluster_live import cluster
 
 # todo debug
 
@@ -53,9 +54,14 @@ beat_data_iterator = 0
 
 chunk_read_size = 256
 
+classification = []
+cluster_chunks = []
+cluster_chunk_number = 0
+
 # todo add a delay of 4 blocks
 #
 while True:
+
 
     data = in_stream.read(chunk_read_size)
 
@@ -99,7 +105,19 @@ while True:
     # print('beat_array detect' + str(beat_detection.get_last()))
 
     if in_chunk_number == 0:
+        cluster_chunks.append(samples) # todo fix double up
+    elif len(samples) > 0 and len(cluster_chunks[cluster_chunk_number]) > 0:
+        print len(cluster_chunks[cluster_chunk_number])
+        print len(samples)
+        cluster_chunks[cluster_chunk_number] = num.concatenate((cluster_chunks[cluster_chunk_number], samples),
+                                                               axis=0)
+
+    if in_chunk_number == 0:
         initial_aubio_sample_offset = beat_detection.get_last()
+    elif in_chunk_number % 80 == 0:
+        cluster(cluster_chunks[cluster_chunk_number])
+        cluster_chunks.append(samples) # todo fix double up
+        cluster_chunk_number = cluster_chunk_number + 1
 
     in_chunk_number = in_chunk_number + 1
 
@@ -111,6 +129,7 @@ while True:
         current_bpm = beat_detection.get_bpm() #60.0/(current_time - previous_time)
         current_confidence = beat_detection.get_confidence()
         # print('BEAT %d: bpm: %f confidence: %f' % (beat_number, current_bpm, current_confidence))
+        beat_number = beat_number + 1
         previous_time = current_time
 
         # prev_beats.put('BEAT %d: bpm: %f confidence: %f' % (beat_number, current_bpm, current_confidence))

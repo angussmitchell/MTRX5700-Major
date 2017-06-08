@@ -7,6 +7,13 @@ from sklearn.decomposition import PCA
 from sklearn.cluster import MeanShift, estimate_bandwidth
 from mpl_toolkits.mplot3d import Axes3D
 from itertools import cycle
+import threading
+
+g_plot = None
+
+def show_plot():
+    global g_plot
+    g_plot.show()
 
 def cluster(data,samplerate = 44100,num_coeficients = 40):
     ## set up parameter
@@ -77,8 +84,8 @@ def cluster(data,samplerate = 44100,num_coeficients = 40):
 
     #load learned features
     ## do calssification of clusters
-    sparse = np.loadtxt("sparse/typical_sparse.txt")
-    chorus = np.loadtxt("chorus/typical_chorus.txt")
+    sparse = np.loadtxt("../classification/sparse/typical_sparse.txt")
+    chorus = np.loadtxt("../classification/chorus/typical_chorus.txt")
 
     #cheat by changing sparse
     sparse[0] = sparse[0] - 22.5
@@ -132,10 +139,15 @@ def cluster(data,samplerate = 44100,num_coeficients = 40):
             print "cluster " + str(k) + " is sparse."+ " chorus = (" + str(test_sparse) + ")" + " sparse = (" + str(test_sparse) + ")"
 
 
-    #plt.show()
+    global g_plot
+    g_plot = plt
 
+    # plt.show()
+    # my_thread = threading.Thread(target=show_plot)
+    # my_thread.start()
 
-
+    # return time to normal
+    time = time/50.0
 
     return time, labels, class_labels
     #now we have features, we should get clusters

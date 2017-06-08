@@ -5,7 +5,7 @@ import wave
 import time
 
 
-wf = wave.open('../music/5783146_All_For_Nothing_Extended_Version.wav', 'rb')
+wf = wave.open('../music/AllForNothing.wav', 'rb')
 
 
 def soundplot(stream):
