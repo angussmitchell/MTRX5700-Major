@@ -57,8 +57,6 @@ print "Auto-alternation: " + str(drone.selfRotation) + "deg/sec"
 
 ## main program
 
-
-
 drone.takeoff()
 print "Takeoff"
 boots.wait_nav(drone, 7.0)
@@ -72,9 +70,17 @@ boots.wait_nav(drone, 3.0)
 #print "move forward"
 #boots.wait_nav(drone, 10)
 
+#print "start spinning"
+#start = time.time()
+#while (time.time() - start) < 3.0:
+#    drone.anim(6, 5000)
+drone.turnLeft(1.0)
+print "turn left"
+boots.wait_nav(drone, 6.0)
+
 drone.stop()
 print "stop"
-boots.wait_nav(drone, 1)
+boots.wait_nav(drone, 1.0)
 
 drone.land()
 print "land"
