@@ -45,15 +45,19 @@ def append_nav(drone):
 
 ## receive navdata packet
 def wait_nav(drone, time_s):
-    NDC = drone.NavDataCount
     start = time.time()
+    NDC = drone.NavDataCount
     while (time.time() - start) < time_s:
         
-        if drone.NavData["altitude"][0] > 2500:     # drone has reached soft altitude limit
+        if drone.NavData["altitude"][0] > 1500:     # drone has reached soft altitude limit
             print "drone too high, stop and land"
             drone.stop()
-            print "stop"
-            time.sleep(0.5)
+            print "stopped"
+            time.sleep(1.0)
+            drone.moveDown(1.0)
+            print "moving down"
+            time.sleep(3.0)
+            print "landing"
             drone.land()
             save_nav()
             sys.exit("exited program")
@@ -80,17 +84,20 @@ def wait_nav(drone, time_s):
 #            save_nav()
 #            sys.exit("exited program")
 
+        dbstart = time.time()
+#        print "start time: " + str(dbstart)
         # wait for the next data package
         while drone.NavDataCount == NDC:  time.sleep(0.001)                       # Wait until next time-unit
         NDC = drone.NavDataCount
         append_nav(drone)
+        print "delta time: " + str(time.time() - dbstart)
 
     return
 
 def self_correct(drone):
     
     drone.stop()        # stop the drone
-    time.sleep(3.0)
+    time.sleep(1.0)
     print "drone has seen marker, drone stopped"
     
     # get new angle reading
@@ -118,9 +125,12 @@ def self_correct(drone):
 
     print "starting to move away from edge"
     drone.move(move1, move2, 0.0, 0.0)  # back away from the edge
-    time.sleep(4.0)
+    time.sleep(2.0)
     print "finished moving away from edge"
     
+    drone.move(move1, move2, 0.0, 0.0)  # back away from the edge
+    time.sleep(2.0)
+
 #    drone.stop()
 #    time.sleep(2.0)
 #    if alpha > 190.0:           # drone needs to turn anti-clockwise to self-correct

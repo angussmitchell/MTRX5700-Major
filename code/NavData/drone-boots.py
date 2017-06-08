@@ -59,8 +59,8 @@ if drone.State[10] == 0:
     print "Navdata: all"
 else:
     print "Navdata: demo. dumb drone"
-    drone.useDemoMode(false)
-    time.sleep(1.0)
+    drone.useDemoMode(False)
+    time.sleep(2.0)
 
 drone.takeoff()
 print "Takeoff"
@@ -71,13 +71,13 @@ drone.mtrim()
 print "mtrim"
 boots.wait_nav(drone, 3.0)
 
-drone.moveUp(0.1)
+drone.moveUp(0.5)
 print "move up"
 boots.wait_nav(drone, 1.0)
 
-drone.moveForward(0.05)
+drone.moveForward(0.15)
 print "move forward"
-boots.wait_nav(drone, 20.0)
+boots.wait_nav(drone, 30.0)
 #
 #drone.anim(0,1000)
 #print "anim 0"

@@ -66,6 +66,18 @@ drone.mtrim()
 print "mtrim"
 boots.wait_nav(drone, 3.0)
 
+drone.moveUp(0.15)
+print "move up"
+boots.wait_nav(drone, 1.0)
+
+drone.moveUp(0.15)
+print "move up"
+boots.wait_nav(drone, 1.0)
+
+drone.moveUp(0.15)
+print "move up"
+boots.wait_nav(drone, 1.0)
+
 #drone.moveForward(0.1)
 #print "move forward"
 #boots.wait_nav(drone, 10)
@@ -79,9 +91,9 @@ boots.wait_nav(drone, 3.0)
 #print "turn left"
 #boots.wait_nav(drone, 6.0)
 
-drone.move(-0.15, -0.12, 0.0, 0.0)
-boots.wait_nav(drone, 1.0)
-print
+#drone.move(-0.15, -0.12, 0.0, 0.0)
+#boots.wait_nav(drone, 1.0)
+#print
 
 drone.stop()
 print "stop"
