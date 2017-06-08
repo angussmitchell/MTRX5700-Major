@@ -43,6 +43,7 @@ def cluster(data,samplerate = 44100,num_coeficients = 40):
     pca = PCA(num_features)
     pca.fit(features)
     features = pca.transform(features)
+
     num_samples = len(features[:,0])
     time = np.arange(0, num_samples,dtype=float)*chunk_size / samplerate
     time = np.transpose(np.asarray(time)) * 50
@@ -91,17 +92,18 @@ def cluster(data,samplerate = 44100,num_coeficients = 40):
     sparse[0] = sparse[0] - 22.5
 
     #plotting - a different colour for every cluster
+    time_plotting = time / 50.
     colours = "rgbyk"
     for k in range(-1,n_clusters):
          my_members = labels == k
          colour_index = k % len(colours)
          if k == -1:        #special case for k = -1 (missing cluster)
-             ax.scatter(missing_cluster_center[0], missing_cluster_center[1], missing_cluster_center[2], 'o',
-                        c='k', s=200)
-             ax.scatter(features[my_members, 0], features[my_members, 1], time[my_members], c='k')
+             ax.scatter(missing_cluster_center[0], missing_cluster_center[1], missing_cluster_center[2]/50, 'o',
+                        c='m', s=200)
+             ax.scatter(features[my_members, 0], features[my_members, 1], time_plotting[my_members], c='m')
          else:
-             ax.scatter(features[my_members,0], features[my_members,1],time[my_members], c = colours[colour_index])
-             ax.scatter(cluster_centers[k-1, 0], cluster_centers[k-1, 1], cluster_centers[k-1,2], 'o', c = colours[colour_index-1],s = 200)
+             ax.scatter(features[my_members,0], features[my_members,1],time_plotting[my_members], c = colours[colour_index])
+             ax.scatter(cluster_centers[k-1, 0], cluster_centers[k-1, 1], cluster_centers[k-1,2]/50.0, 'o', c = colours[colour_index-1],s = 200)
 
     ax.set_xlabel("x1")
     ax.set_ylabel("x2")
@@ -113,12 +115,12 @@ def cluster(data,samplerate = 44100,num_coeficients = 40):
     plt.title('Calculate number of clusters = : %d' % n_clusters)
 
     #initialsie empty class labels vector
-    class_labels = np.arange(0,num_chunks)
+    class_labels = np.zeros(num_chunks)
 
     #find inf each cluster is closer to sparse or chorus
     test_chorus = (missing_cluster_center[0] - chorus[0]) + (missing_cluster_center[1] - chorus[1])
     test_sparse = (missing_cluster_center[0] - sparse[0]) + (missing_cluster_center[1] - sparse[1])
-    if abs(test_chorus) > abs(test_sparse):
+    if abs(test_chorus) < abs(test_sparse):
         print "(missing) cluster "  + " is chorus." + " chorus = (" + str(test_chorus) + ")" + " sparse = (" + str(
             test_sparse) + ")"
         chorus_index = labels == -1
@@ -128,10 +130,12 @@ def cluster(data,samplerate = 44100,num_coeficients = 40):
             test_sparse) + ")"
 
 
+
+
     for k in range(0,n_clusters-1):
         test_chorus = (cluster_centers[k,0] - chorus[0]) + (cluster_centers[k,1]-chorus[1])
         test_sparse = (cluster_centers[k,0] - sparse[0])+ (cluster_centers[k,1]-sparse[1])
-        if abs(test_chorus) > abs(test_sparse):
+        if abs(test_chorus) < abs(test_sparse):
             print "cluster " + str(k) + " is chorus." + " chorus = (" + str(test_chorus) + ")" + " sparse = (" + str(test_sparse) + ")"
             chorus_index = labels == k
             class_labels[chorus_index] = 1       #set all chorus classifications to 1
@@ -142,7 +146,7 @@ def cluster(data,samplerate = 44100,num_coeficients = 40):
     global g_plot
     g_plot = plt
 
-    # plt.show()
+    plt.show()
     # my_thread = threading.Thread(target=show_plot)
     # my_thread.start()
 
@@ -150,5 +154,4 @@ def cluster(data,samplerate = 44100,num_coeficients = 40):
     time = time/50.0
 
     return time, labels, class_labels
-    #now we have features, we should get clusters
 
