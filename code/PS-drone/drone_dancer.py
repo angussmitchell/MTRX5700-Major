@@ -4,6 +4,8 @@ import math
 from Queue import Queue
 import threading
 
+# TODO battery check before flips
+
 # like Mao's last dancer, but drone version
 class drone_dancer:
     # drone connection
