@@ -11,7 +11,7 @@ import boots
 
 ## drone variables
 multi_config = True
-demo_mode = False
+demo_mode = True
 front_cam = False
 
 ## clean start up
@@ -29,6 +29,18 @@ while (drone.getBattery()[0] == -1):  time.sleep(0.1)                         # 
 ## print out battery status
 print "Battery: "+str(drone.getBattery()[0])+"%  "+str(drone.getBattery()[1]) # Gives a battery-status
 
+## set mode of data packages
+drone.useDemoMode(demo_mode)
+if demo_mode == False:
+#        drone.getNDpackage(["demo", "time", "pwm", "altitude", "magneto", "vision_detect", "chksum"])   # Packets, which shall be decoded
+    drone.getNDpackage(["all"])         # Packets, which shall be decoded
+    print "Demo mode: off"
+else:
+    drone.getNDpackage(["demo", "vision_detect"])
+    print "Demo mode: on"
+
+time.sleep(0.5)
+
 ## configure the drone
 if multi_config == True:
     print "using multi-configuration mode to enable camera"
@@ -38,18 +50,21 @@ if multi_config == True:
     for i in drone.ConfigData:
         if i[0].count("custom:")==1 and i[0].count("_id")==1:    print str(i)
 
-    ## set mode of data packages
-    if demo_mode == False:
-        drone.useMDemoMode(False)    # Get data 200 times a second
-#        drone.getNDpackage(["demo", "time", "pwm", "altitude", "magneto", "vision_detect", "chksum"])   # Packets, which shall be decoded
-        drone.getNDpackage(["all"])         # Packets, which shall be decoded
-        print "Demo mode: off"
-    else:
-        drone.useMDemoMode(False)
-        drone.getNDpackage(["demo", "vision_detect"])
-        print "Demo mode: on"
-
-    time.sleep(0.5)
+#    drone.useMDemoMode(demo_mode)
+#
+#    ## set mode of data packages
+#    if demo_mode == False:
+##        drone.getNDpackage(["demo", "time", "pwm", "altitude", "magneto", "vision_detect", "chksum"])   # Packets, which shall be decoded
+#        drone.getNDpackage(["all"])         # Packets, which shall be decoded
+#        print "Demo mode: off"
+#    else:
+#        drone.getNDpackage(["demo", "vision_detect"])
+#        print "Demo mode: on"
+#
+#    time.sleep(0.5)
+#
+#    if drone.State[10] != demo_mode:
+#        print "drone.useMDemoMode() does not work!"
 
     ## set up vision detection
     # Shell-Tag=1, Roundel=2, Black Roundel=4, Stripe=8, Cap=16, Shell-Tag V2=32, Tower Side=64, Oriented Roundel=128
@@ -114,6 +129,11 @@ if drone.State[10] == 0:
     print "Navdata: all"
 else:
     print "Navdata: demo"
+#    drone.useDemoMode(True)
+#    drone.getNDpackage("all")
+#    time.sleep(0.5)
+#    if drone.State[10] == 0:
+#        print "Navdata: changed to all"
 
 drone.takeoff()
 print "Takeoff"
