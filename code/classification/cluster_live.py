@@ -5,19 +5,19 @@ from sklearn.decomposition import PCA
 def cluster(chunk):
     samplerate = 44100
     num_coeficients = 40
-
+    num_features = 2
     #get mfcc
     features, mspec, spec = mfcc(chunk, len(chunk), len(chunk), samplerate, num_coeficients)
 
     #do PCA
-    pca = PCA(2)
+    pca = PCA(num_features)
     pca.fit(features)
     features = pca.transform(features)
 
     # load learned features
     ## do calssification of clusters
-    sparse = np.loadtxt("./classification/sparse/typical_sparse.txt")
-    chorus = np.loadtxt("./classification/chorus/typical_chorus.txt")
+    sparse = np.loadtxt("sparse/typical_sparse.txt")
+    chorus = np.loadtxt("chorus/typical_chorus.txt")
 
     test_chorus = (features[0] - chorus[0]) + (features[1] - chorus[1])
     test_sparse = (features[0] - sparse[0]) + (features[1] - sparse[1])

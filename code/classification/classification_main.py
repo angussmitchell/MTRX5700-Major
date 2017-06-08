@@ -15,7 +15,7 @@ from cluster import cluster
 rate, raw_data = wavfile.read("../music/Vegas.wav")
 data = (raw_data[:,0]/2.0+raw_data[:,1]/2.0)
 
-
+#cluster(data[0:1024*10])
 # get mfcc
 time, labels, class_labels = cluster(data,samplerate=44100)
 
