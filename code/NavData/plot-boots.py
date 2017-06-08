@@ -1,56 +1,73 @@
 ## MTRX5700
 # Xue Yin Zhang
 #
-# Dependencies: check init_boots.py to see which data packages have been enabled
+# Dependencies: check init_boots.py to see which data packages have been enabled/saved
 #
 # Note to Neill: check battery status before each move
 
 from numpy import *
 import math
 import matplotlib.pyplot as plt
+#import pylab as plt
+import pickle
 
-def find(s, ch):
-    return [i for i, ltr in enumerate(s) if ltr == ch]
+plot_vision = True
+plot_altitude = True
 
-fh = open("NavData-6Jun-good.txt", "r")
-data = fh.readlines()
+with open('navdata-vars.pickle') as f:  # Python 3: open(..., 'rb')
+#    pitch, roll, yaw, demo_alt, vx, vy, vz, nav_time, magneto, magneto_raw, pwm_fl, pwm_fr, pwm_br, pwm_bl, detect_n, detect_type, detect_x, detect_y, detect_width, detect_depth, detect_dist, detect_ang, detect_rot, checksum = pickle.load(f)
+    pitch, roll, yaw, vx, vy, vz, nav_time, mx, my, mz, altitude_ref, detect_n, detect_dist, detect_rot = pickle.load(f)
 
-pitch = []
-roll = []
-yaw = []
-alt = []
-sens = []
-pres = []
-magx = []
-magy = []
-magz = []
+## calculating the time
+x = [y - nav_time[0] for y in nav_time]
 
-with open("NavData-6Jun-good.txt", "r") as f:
-    for line in f:
-        if 'Aptitude' in line:  # extract on the data values for aptitude (pitch roll yaw)
-#            print "Apt: " + line[31:-2]
-            ind = find(line, ",")
-            pitch.append(line[31:ind[2]])
-            roll.append(line[ind[2]+1:ind[3]])
-            yaw.append(line[ind[3]+1:-2])
-#            print pitch[-1] + " " + roll[-1] + " " + yaw[-1]
-        elif 'Altitude' in line:
-#            print "Alt: " + line[30:-2]
-            ind = find(line, "/")
-            alt.append(line[30:ind[2]-1])
-            sens.append(line[ind[2]+2:ind[3]-1])
-            pres.append(line[ind[3]+2:])
-        elif 'Megnetometer' in line:
-            ind = find(line, ",")
-            magx.append(line[31:ind[2]])
-            magy.append(line[ind[2]+1:ind[3]])
-            magz.append(line[ind[3]+1:-2])
-#            print "Mag: " + line[31:-2]
+fig_ind = 1
+
+if plot_vision == True:
+    
+    plt.figure(fig_ind)
+    
+    plt.subplot(311)
+    plt.plot(x, detect_n,'r', label = "number of detected markers")
+    plt.legend(loc='upper right')
+    plt.grid(True)
+    plt.xlabel("Time (s)")
+
+    plt.subplot(312)
+    plt.plot(x, detect_dist,'b', label = "distance from marker")
+    plt.legend(loc='upper right')
+    plt.grid(True)
+    plt.xlabel("Time (s)")
+
+    plt.subplot(313)
+    plt.plot(x, detect_rot,'g', label = "rotation")
+    plt.legend(loc='upper right')
+    plt.grid(True)
+    plt.xlabel("Time (s)")
+
+    plt.title("Oriented Marker Detections")
+    plt.xlabel("Time (s)")
+
+    fig_ind = fig_ind + 1
+
+if plot_altitude == True:
+    
+    plt.figure(fig_ind)
+    
+    plt.plot(x, altitude_ref,'g', label = "altitude (altitude ref)")
+    plt.legend(loc='upper right')
+    plt.grid(True)
+    plt.xlabel("Time (s)")
+    plt.title("Altitude Measurements")
+    plt.xlabel("Time (s)")
+    
+    fig_ind = fig_ind + 1
+
+if plot_vision + plot_altitude > 0:
+    plt.show()
+
+##
 
 
-
-plt.plot(pitch,'r') # plotting t,a separately
-plt.plot(roll,'b') # plotting t,b separately
-plt.plot(yaw,'g') # plotting t,c separately
-
-plt.show()
+#print "show number of markers"
+#for p in detect_n: print p
