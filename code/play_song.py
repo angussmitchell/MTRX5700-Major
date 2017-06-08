@@ -24,6 +24,7 @@ class play_song:
     __current_confidence = 0 # aubio's confidence of the current bpm
     __chunk_chorus = None
     __bpm_confidence_threshold = 0.1 # required aubio bpm confidence to use beat function rather than onset function
+    __force_beat_event = False # when true forces the beat event
 
     # TODO ONSET threshold
 
@@ -65,7 +66,7 @@ class play_song:
         self.__chunk_bpm = numpy.zeros(num_chunks, dtype=float)
         self.__chunk_bpm_confidence = numpy.zeros(num_chunks, dtype=float)
 
-        o.set_delay(100)
+        o.set_delay(400) # approx 150bpm default
         total_frames = 0
 
         while True:
@@ -84,28 +85,28 @@ class play_song:
                 self.__chunk_is_onset[current_chunk_number] = 1
 
 
-          #  if skip_bpm_detection_time > total_frames /  # todo current time
-            is_beat = o(samples)
-            if is_beat:
-                this_beat = int(total_frames - delay + is_beat[0] * hop_s)
-                # print("%f" % (this_beat / float(samplerate)))
-                # beats.append(this_beat)
-                current_beat_time_s = this_beat / float(samplerate)
-                self.__beat_times.append(current_beat_time_s)
+            if skip_bpm_detection_time < (total_frames / s.samplerate):  # todo current time
+                is_beat = o(samples)
+                if is_beat:
+                    this_beat = int(total_frames - delay + is_beat[0] * hop_s)
+                    # print("%f" % (this_beat / float(samplerate)))
+                    # beats.append(this_beat)
+                    current_beat_time_s = this_beat / float(samplerate)
+                    self.__beat_times.append(current_beat_time_s)
 
-                current_chunk_number = int((current_beat_time_s * samplerate)/self.__chunk_size)
-                self.__chunk_is_beat[current_chunk_number] = 1
+                    current_chunk_number = int((current_beat_time_s * samplerate)/self.__chunk_size)
+                    self.__chunk_is_beat[current_chunk_number] = 1
 
-                if beat_number == 0:
+                    # if beat_number == 0:
+                    #     last_beat_chunk_number = current_chunk_number
+
+                    self.__chunk_bpm[last_beat_chunk_number:current_chunk_number] = o.get_bpm()
+
+                    self.__chunk_bpm_confidence[last_beat_chunk_number:current_chunk_number] = o.get_confidence()
+
                     last_beat_chunk_number = current_chunk_number
 
-                self.__chunk_bpm[last_beat_chunk_number:current_chunk_number] = o.get_bpm()
-
-                self.__chunk_bpm_confidence[last_beat_chunk_number:current_chunk_number] = o.get_confidence()
-
-                last_beat_chunk_number = current_chunk_number
-
-                beat_number = beat_number + 1
+                    beat_number = beat_number + 1
 
             total_frames += read
             if read < hop_s: break
@@ -124,6 +125,9 @@ class play_song:
 
     def current_bpm_confidence(self):
         return self.__chunk_bpm_confidence[self.__chunk_number]
+
+    def set_force_beat_event(self, force_beat = True):
+        self.__force_beat_event = force_beat
 
     # returns a true or false value indicating whether it's a chorus
     def is_chorus(self):
@@ -184,18 +188,17 @@ class play_song:
         while chunks and self.__playing:
             stream.write(chunks)
 
-
             self.__current_time = (self.__chunk_size * (self.__chunk_number) + 0.0) / self.__file.getframerate()
 
-            # todo fire beat event
-
-            if self.__chunk_is_beat[self.__chunk_number] and self.__chunk_bpm_confidence[self.__chunk_number] >= self.__bpm_confidence_threshold:
+            if self.__chunk_is_beat[self.__chunk_number] and self.__force_beat_event:
+                           # self.__chunk_bpm_confidence[self.__chunk_number] >= self.__bpm_confidence_threshold):
                 # print('beat! %d' % beat_number)
                 beat_number = beat_number + 1
                 if self.__beat_event:
                     self.__beat_event()
 
-            if self.__chunk_is_onset[self.__chunk_number] and self.__chunk_bpm_confidence[self.__chunk_number] < self.__bpm_confidence_threshold:
+            if self.__chunk_is_onset[self.__chunk_number] and not self.__force_beat_event: #and \
+                           # self.__chunk_bpm_confidence[self.__chunk_number] < self.__bpm_confidence_threshold:
                 # print('onset! %d' % onset_number)
                 if self.__onset_event:
                     self.__onset_event()
