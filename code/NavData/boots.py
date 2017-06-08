@@ -12,7 +12,6 @@ import pickle
 pitch = []
 roll = []
 yaw = []
-demo_alt = []
 vx = []
 vy = []
 vz = []
@@ -20,28 +19,15 @@ nav_time = []
 mx = []
 my = []
 mz = []
-pwm_fl = []
-pwm_fr = []
-pwm_br = []
-pwm_bl = []
 altitude_ref = []
 detect_n = []
-detect_type = []
-detect_x = []
-detect_y = []
-detect_width = []
-detect_depth = []
-detect_dist = []
-detect_ang = []
 detect_rot = []
-checksum = []
 
 ## store all the navdata
 def append_nav(drone):
     pitch.append(drone.NavData["demo"][2][0])   # theta
     roll.append(drone.NavData["demo"][2][1])    # phi
     yaw.append(drone.NavData["demo"][2][2])     # psi
-    demo_alt.append(drone.NavData["demo"][3])   # altitude in
     vx.append(drone.NavData["demo"][4][0])      # velocity in x-direction
     vy.append(drone.NavData["demo"][4][1])      # velocity in y-direction
     vz.append(drone.NavData["demo"][4][2])
@@ -49,10 +35,9 @@ def append_nav(drone):
     mx.append(drone.NavData["magneto"][0][0])
     my.append(drone.NavData["magneto"][0][1])
     mz.append(drone.NavData["magneto"][0][2])
-    altitude_ref.append(drone.NavData["altitude"][3])   # altitude in mm
+    altitude_ref.append(drone.NavData["altitude"][0])   # altitude in mm
     detect_n.append(drone.NavData["vision_detect"][0])      # number of markers detected
-    detect_dist.append(drone.NavData["vision_detect"][6][0])
-    detect_ang.append(drone.NavData["vision_detect"][7][0])
+    detect_rot.append(drone.NavData["vision_detect"][7][0])
     return
 
 ## receive navdata packet
@@ -67,5 +52,5 @@ def wait_nav(drone, time_s):
 
 def save_nav():
     with open('navdata-vars.pickle', 'w') as f:  # Python 3: open(..., 'wb')
-        pickle.dump([pitch, roll, yaw, demo_alt, vx, vy, vz, nav_time, mx, my, mz, pwm_fl, pwm_fr, pwm_br, pwm_bl, detect_n, detect_type, detect_x, detect_y, detect_width, detect_depth, detect_dist, detect_ang, detect_rot, checksum], f)
+        pickle.dump([pitch, roll, yaw, vx, vy, vz, nav_time, mx, my, mz, altitude_ref, detect_n, detect_dist, detect_rot], f)
     print "saved navdata"
