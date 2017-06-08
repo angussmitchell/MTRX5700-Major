@@ -21,6 +21,7 @@ my = []
 mz = []
 altitude_ref = []
 detect_n = []
+detect_dist = []
 detect_rot = []
 
 ## store all the navdata
@@ -37,6 +38,7 @@ def append_nav(drone):
     mz.append(drone.NavData["magneto"][0][2])
     altitude_ref.append(drone.NavData["altitude"][0])   # altitude in mm
     detect_n.append(drone.NavData["vision_detect"][0])      # number of markers detected
+    detect_dist.append(drone.NavData["vision_detect"][6])
     detect_rot.append(drone.NavData["vision_detect"][7][0])
     return
 
