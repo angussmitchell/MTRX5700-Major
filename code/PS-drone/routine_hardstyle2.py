@@ -104,17 +104,17 @@ time.sleep(13.5)
 audio.set_onset_event(None)
 dancer.enqueue_move(dancer.dance_moves.MOVE_SPIN_CLOCKWISE, 6.5)
 print('spinning')
-time.sleep(8) #todo remove this
+# time.sleep(8) #todo remove this
 
 
 print('going up')
-time.sleep(3.5) #todo remove this
+# time.sleep(3.5) #todo remove this
 
 dancer.enqueue_move(dancer.dance_moves.MOVE_SPIN_CLOCKWISE_UP, 4.0)
 dancer.enqueue_move(dancer.dance_moves.MOVE_NONE, 0.5)
 
 print('flip!')
-time.sleep(2) # todo remove this
+# time.sleep(2) # todo remove this
 dancer.enqueue_move(dancer.dance_moves.MOVE_FLIP, 2.0)
 
 

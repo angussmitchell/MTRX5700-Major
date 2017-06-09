@@ -41,7 +41,11 @@ def beat_hook():
     # else:
     #     print 'sparse...'
 
-    dancer.enqueue_move(dancer.dance_moves.MOVE_BOB_FB, 0.15, delay=0.15)
+
+    if beat_num > 16:
+        dancer.enqueue_move(dancer.dance_moves.MOVE_BOB_FBLR, 0.15, delay=0.15)
+    else:
+        dancer.enqueue_move(dancer.dance_moves.MOVE_BOB_FB, 0.15, delay=0.15)
 
     beat_num = beat_num + 1
 
