@@ -75,7 +75,7 @@ drone.moveUp(0.5)
 print "move up"
 boots.wait_nav(drone, 1.0)
 
-drone.moveForward(0.15)
+drone.moveForward(0.10)
 print "move forward"
 boots.wait_nav(drone, 30.0)
 #
