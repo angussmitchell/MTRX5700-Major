@@ -5,7 +5,14 @@
 \usepackage{subcaption}
 \usepackage[sort,nocompress]{cite}
 \usepackage{matlab-prettifier}
+\usepackage{titling}
 
+\newcommand{\subtitle}[1]{%
+ 	\posttitle{%
+		\par\end{center}
+		\begin{center}\large#1\end{center}
+		\vskip0.5em}%
+}
 
 \hypersetup{
 	colorlinks = true,
@@ -52,7 +59,9 @@
 \rfoot{Page \thepage}
 
 %opening
-\title{MTRX5700 Experimental Robotics\\Major Project}
+\title{Do a Flip}
+
+\subtitle{MTRX5700 Experimental Robotics\\Major Project}
 \author{Neill Foweraker 430225437\\Angus Mitchell 440246554\\Xue Yin Zhang 440305585}
 
 \begin{document}
@@ -64,11 +73,17 @@
 \newpage
 
 
-\input{question1.tex}
+\input{1-introduction.tex}
 \newpage
-\input{question2.tex}
+\input{2-background.tex}
 \newpage
-\input{question3.tex}
+\input{3-experimental.tex}
+\newpage
+\input{4-results.tex}
+\newpage
+\input{5-discussion.tex}
+\newpage
+\input{6-conclusions.tex}
 
 \bibliographystyle{plain}
 \bibliography{biblio}

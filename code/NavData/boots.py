@@ -105,7 +105,7 @@ def self_correct(drone):
     while drone.NavDataCount == NDC:  time.sleep(0.001)                       # Wait until next time-unit
     alpha = drone.NavData["vision_detect"][7][0]
     
-    speed_scale = 0.05   # set the speed for the movement
+    speed_scale = 0.08   # set the speed for the movement
     
 #    alpha = alpha + 180.0       # because of maths!! see my notepad (in red pen) for more details
     alpha = alpha - 90.0
