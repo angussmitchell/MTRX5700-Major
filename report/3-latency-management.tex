@@ -3,3 +3,8 @@
 %%NEILL: multithreading stuff, how dance moves are synchronised with the music, peculiarities with the drone software, how to specify the length of moves, etc...
 %I don't know if you wanna about how some of the dance moves were hardcoded ^_^"
 % optional: live stuff, like how there is a bit of latency before the drone starts moving because it takes a few beats to confirm a high enough confidence of bpm
+
+Latency is an important aspect of the dancing drone solution, as the drone must perform a move suitably fast in
+order to appear visually pleasing and in time with the music. Experimentally, we determined that almost all of
+the time the drone will begin to respond to a command within 5ms of receiving it, however it can be delayed up to
+20ms.

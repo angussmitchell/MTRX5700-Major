@@ -9,9 +9,18 @@ The objective of the sound processing module was to extract information from the
 \subsection{Tempo Detection}
 Tempo detection utilised Aubio's tempo and onset detection library. The python library consists of a set of python wrapper classes which can be used to call the C implemented Aubio library. \\
 \\
-TALK ABOUT SWITCHING BETWEEN ONSET AND TEMPO DETECTION DURING LIVE\\
+Aubio returns a confidence level as a floating point decimal number. When this confidence level falls below the
+threshold set in the drone dancer module, the beat onset event is used for dancing rather than the beat event.
+Aubio continues to fire the beat event with its last known bpm, so in songs where bpm changes this is an issue.
 \\
-TALK ABOUT RELIABILITY IN NON LIVE CASE
+A limitation of Aubio's beat detection is that it does not return the bpm of the current sample, but some samples
+in the past. For audio that is pre-processed, this is not an issue as all the beat times can be offset by a given
+amount, however in the case of live audio this is an issue. In tests conducted with live audio, reaction to a
+change in bpm occurred approximately 8 beats after the bpm had changed. Our solution to this issue was to delay
+the outgoing audio in the case of live line-in input in order to allow the beat times to be offset to their
+correct locations. However, audio in from a microphone is unable to be delayed, which is why the drone dancer
+module begins using the beat onset event rather than the beat event when Aubio's bpm confidence level drops below
+a threshold value.
 
 \subsection{Section Classification}
 The goal of classification was to divide the song into several distinct sections which can intuitively be called ``intro", ``verse", ``chorus" or ``instrumental". Automating this process posed a significant challenge. The approach that was taken was a machine learning approach, using a set of features in the song to classify the type of each section of the song. \\

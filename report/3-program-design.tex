@@ -30,6 +30,10 @@ was needed for accurate bpm representation of live audio where the bpm varies ov
 The reasons for this are outlined in the 'Tempo Detection' section further in this report, where the limitations
 of the Aubio library are discussed. The code behind the audio module is viewable at \eqref{code:play_song.py}\\
 
+The audio module also handles synchronization of events that should be performed to the beat, or on the onset of
+a beat. Function pointers can be given to the audio module to be executed when it detects a beat or onset of a
+beat (depending on if the current bpm is regular enough to use).
+
 \subsubsection{Drone Dancer Module}
 The drone dancer module is responsible for all physical movements of the drone. One of the main limitations of
 the ARDrone.2 encountered was the internal command-queue behaving inconsistently. According to Parrot's
@@ -56,14 +60,20 @@ beat by the audio module, as discussed in the previous section. For the code beh
 
 The drone dancer class is also responsible for navigation of the drone. Using a separate thread, the navigation
 data is constantly read in from the drone. If a roundel is detected on the ground, the dancing thread is blocked
-until the navigation thread has moved the drone back into a safe location.
+until the navigation thread has moved the drone back into a safe location.\\
 
 \subsubsection{Classification Module}
-
+The classification module performs cluster analysis on the last 10 chunks in the current audio stream to
+determine whether they are likely to be a chorus or sparse section. The classification module had to be trained before
+use, but is able to classify song sections in real time. The operation of the classification module is further
+discussed in the sound processing section further in this report. The code behind the cluster module is viewable
+at \eqref{code:cluster.py}.\\
 
 \subsubsection{Routine}
 The main routine file is what uses all the modules together from their public interfaces in order to make the
-drone dance in a certain situation.
+drone dance in a certain situation. An example routine file is viewable at \eqref{code:routine_hardstyle.py}.
+
+A data flow diagram showing the high-level communication between each module is shown overleaf.
 
 \onecolumn
 \begin{figure*}[h]
