@@ -363,8 +363,7 @@ class drone_dancer:
     def __do_move(self, dance_move):
         self.do_move(dance_move.move_type, dance_move.duration, dance_move.frequency, dance_move.delay)
 
-    # bust a move! # todo currently no way to set speed, only duration - you can use ps drone setspeed for now
-    def do_move(self, move_type, duration=1.0, frequency=2.5, delay=0.0):  # todo fix sleep related errors
+    def do_move(self, move_type, duration=1.0, frequency=2.5, delay=0.0):
         self.drone_state = self.drone_states.STATE_DANCING
 
         if delay > 0.0:
