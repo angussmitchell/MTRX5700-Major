@@ -1,1 +1,11 @@
 \section{Discussion}
+
+\subsection{Classification}
+Alot was learnt in the design and implementation of the classification module for this project. While the MFCC, PCA and clustering worked well, classification did not work as intended. Some improvements to this module are listed below. 
+\begin{itemize}
+  \item Use of online database for classification
+  \item Implementation of a small multilayer perceptron on training data, using a larger feature vector
+  \item Inclusion of a larger set of classes
+  \item Use of a larger features vector
+\end{itemize}
+The use of a three dimensional feature for clustering was on the the main issues. Two frequency based features do not provide enough information for classification to be sucessfully implemented - even if a complex classification method was used.
