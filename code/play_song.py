@@ -6,11 +6,10 @@ import numpy
 from cluster import cluster
 import scipy.io.wavfile as wavfile
 
-# todo if bpm not confident use onset
 
 class play_song:
     __current_time   = 0.0   # stores current time in seconds
-    __chunk_size     = 1024  # chunk size todo can't change this cos of chunk chorus
+    __chunk_size     = 1024  # chunk size
     __chunk_number   = 0     # the current chunk we're playing
     __playing        = False # whether we're playing
     __current_bpm    = 0.0   # stores the current bpm
@@ -23,10 +22,10 @@ class play_song:
     __chunk_bpm_confidence = None
     __current_confidence = 0 # aubio's confidence of the current bpm
     __chunk_chorus = None
-    __bpm_confidence_threshold = 0.1 # required aubio bpm confidence to use beat function rather than onset function
+    __bpm_confidence_threshold = 0.1 # required aubio bpm confidence to use
+                                     # beat function rather than onset function
     __force_beat_event = False # when true forces the beat event
 
-    # TODO ONSET threshold
 
     onsets          = []
 
@@ -85,7 +84,7 @@ class play_song:
                 self.__chunk_is_onset[current_chunk_number] = 1
 
 
-            if skip_bpm_detection_time < (total_frames / s.samplerate):  # todo current time
+            if skip_bpm_detection_time < (total_frames / s.samplerate):
                 is_beat = o(samples)
                 if is_beat:
                     this_beat = int(total_frames - delay + is_beat[0] * hop_s)
@@ -102,7 +101,8 @@ class play_song:
 
                     self.__chunk_bpm[last_beat_chunk_number:current_chunk_number] = o.get_bpm()
 
-                    self.__chunk_bpm_confidence[last_beat_chunk_number:current_chunk_number] = o.get_confidence()
+                    self.__chunk_bpm_confidence[last_beat_chunk_number:current_chunk_number]
+                            = o.get_confidence()
 
                     last_beat_chunk_number = current_chunk_number
 
@@ -160,7 +160,9 @@ class play_song:
     # worker for playing audio in a thread
     def __audio_worker(self):
         pyaudio_instance = pyaudio.PyAudio()
-        stream = pyaudio_instance.open(format=pyaudio_instance.get_format_from_width(self.__file.getsampwidth()),
+        stream = pyaudio_instance.open(
+                        format=pyaudio_instance.get_format_from_width(
+                            self.__file.getsampwidth()),
                         channels=self.__file.getnchannels(),
                         rate=self.__file.getframerate(),
                         output=True)
@@ -188,37 +190,17 @@ class play_song:
         while chunks and self.__playing:
             stream.write(chunks)
 
-            self.__current_time = (self.__chunk_size * (self.__chunk_number) + 0.0) / self.__file.getframerate()
+            self.__current_time = (self.__chunk_size * (self.__chunk_number) + 0.0)
+                / self.__file.getframerate()
 
             if self.__chunk_is_beat[self.__chunk_number] and self.__force_beat_event:
-                           # self.__chunk_bpm_confidence[self.__chunk_number] >= self.__bpm_confidence_threshold):
-                # print('beat! %d' % beat_number)
                 beat_number = beat_number + 1
                 if self.__beat_event:
                     self.__beat_event()
 
-            if self.__chunk_is_onset[self.__chunk_number] and not self.__force_beat_event: #and \
-                           # self.__chunk_bpm_confidence[self.__chunk_number] < self.__bpm_confidence_threshold:
-                # print('onset! %d' % onset_number)
+            if self.__chunk_is_onset[self.__chunk_number] and not self.__force_beat_event:
                 if self.__onset_event:
                     self.__onset_event()
-
-
-
-            #
-            # if self.__beat_times[beat_time_iterator] < self.__current_time - beat_time_threshold:
-            #     beat_time_iterator = beat_time_iterator + 1
-            #
-            # if abs(self.__current_time - self.__beat_times[beat_time_iterator]) < beat_time_threshold:
-            #     # print('beat')
-            #     if self.__beat_event and self.__current_time - last_beat_time > beat_delay_threshold:
-            #         print('calling beat event %d' % beat_number)
-            #         beat_number = beat_number + 1
-            #         self.__current_bpm = 60.0/(self.__current_time - last_beat_time)
-            #         last_beat_time = self.__current_time
-            #         self.__beat_event()
-
-
 
             self.__chunk_number = self.__chunk_number + 1
             chunks = self.__file.readframes(self.__chunk_size)

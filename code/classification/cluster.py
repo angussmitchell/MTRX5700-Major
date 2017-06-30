@@ -66,7 +66,8 @@ def cluster(data,samplerate = 44100,num_coeficients = 40, show_plots = False, ro
 
     # Do MeanShift clustering
     bandwidth = estimate_bandwidth(features, quantile=0.3, n_samples=num_chunks)
-    ms = MeanShift(bandwidth = bandwidth, bin_seeding=True,cluster_all = False,n_jobs = -1, min_bin_freq= 10)     #setup MeanShift parameters
+    ms = MeanShift(bandwidth = bandwidth, bin_seeding=True,cluster_all = False,
+            n_jobs = -1, min_bin_freq= 10)     #setup MeanShift parameters
     ms.fit(features)                                        #fit MeanShift to data
     labels = ms.labels_                                         #collect cluster labels
     cluster_centers = ms.cluster_centers_                       #record cluster centers
@@ -103,12 +104,18 @@ def cluster(data,samplerate = 44100,num_coeficients = 40, show_plots = False, ro
          my_members = labels == k
          colour_index = k % len(colours)
          if k == -1:        #special case for k = -1 (missing cluster)
-             ax.scatter(missing_cluster_center[0], missing_cluster_center[1], missing_cluster_center[2]/50, 'o',
+             ax.scatter(missing_cluster_center[0],
+                        missing_cluster_center[1],
+                        missing_cluster_center[2]/50,
+                        'o',
                         c='m', s=200)
-             ax.scatter(features[my_members, 0], features[my_members, 1], time_plotting[my_members], c='m')
+             ax.scatter(features[my_members, 0], features[my_members, 1],
+                     time_plotting[my_members], c='m')
          else:
-             ax.scatter(features[my_members,0], features[my_members,1],time_plotting[my_members], c = colours[colour_index])
-             ax.scatter(cluster_centers[k-1, 0], cluster_centers[k-1, 1], cluster_centers[k-1,2]/50.0, 'o', c = colours[colour_index-1],s = 200)
+             ax.scatter(features[my_members,0], features[my_members,1],time_plotting[my_members], c
+                     = colours[colour_index])
+             ax.scatter(cluster_centers[k-1, 0], cluster_centers[k-1, 1],
+                     cluster_centers[k-1,2]/50.0, 'o', c = colours[colour_index-1],s = 200)
 
     ax.set_xlabel("x1")
     ax.set_ylabel("x2")
@@ -126,12 +133,14 @@ def cluster(data,samplerate = 44100,num_coeficients = 40, show_plots = False, ro
     test_chorus = (missing_cluster_center[0] - chorus[0]) + (missing_cluster_center[1] - chorus[1])
     test_sparse = (missing_cluster_center[0] - sparse[0]) + (missing_cluster_center[1] - sparse[1])
     if abs(test_chorus) < abs(test_sparse):
-        print "(missing) cluster "  + " is chorus." + " chorus = (" + str(test_chorus) + ")" + " sparse = (" + str(
+        print "(missing) cluster "  + " is chorus." + " chorus = (" + str(test_chorus)
+            + ")" + " sparse = (" + str(
             test_sparse) + ")"
         chorus_index = labels == -1
         class_labels[chorus_index] = 1  # set all chorus classifications to 1
     else:
-        print "(missing) cluster "  + " is sparse." + " chorus = (" + str(test_sparse) + ")" + " sparse = (" + str(
+        print "(missing) cluster "  + " is sparse." + " chorus = (" + str(test_sparse) + ")"
+        + " sparse = (" + str(
             test_sparse) + ")"
 
 
@@ -141,11 +150,13 @@ def cluster(data,samplerate = 44100,num_coeficients = 40, show_plots = False, ro
         test_chorus = (cluster_centers[k,0] - chorus[0]) + (cluster_centers[k,1]-chorus[1])
         test_sparse = (cluster_centers[k,0] - sparse[0])+ (cluster_centers[k,1]-sparse[1])
         if abs(test_chorus) < abs(test_sparse):
-            print "cluster " + str(k) + " is chorus." + " chorus = (" + str(test_chorus) + ")" + " sparse = (" + str(test_sparse) + ")"
+            print "cluster " + str(k) + " is chorus." + " chorus = (" + str(test_chorus) + ")" +
+            " sparse = (" + str(test_sparse) + ")"
             chorus_index = labels == k
             class_labels[chorus_index] = 1       #set all chorus classifications to 1
         else:
-            print "cluster " + str(k) + " is sparse."+ " chorus = (" + str(test_sparse) + ")" + " sparse = (" + str(test_sparse) + ")"
+            print "cluster " + str(k) + " is sparse."+ " chorus = (" + str(test_sparse) + ")"
+            + " sparse = (" + str(test_sparse) + ")"
 
 
     global g_plot

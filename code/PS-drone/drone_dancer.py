@@ -44,11 +44,10 @@ class drone_dancer:
 
     drone_state = drone_states.STATE_LANDED
 
-    # todo wiggle, circle, flip
     class dance_moves:
         MOVE_NONE           = 0  # do no move
         MOVE_WIGGLE         = 1  # wiggle
-        MOVE_WIGGLE_TOGGLE  = 2  # toggle wiggle, initially right, then left, then through the 4th dimension
+        MOVE_WIGGLE_TOGGLE  = 2  # toggle wiggle, initially right, then left
         MOVE_WIGGLE_STOP    = 3  # stops wiggling
         MOVE_CIRCLE         = 4  # circle
         MOVE_BOB            = 5  # bob up/down
@@ -168,7 +167,8 @@ class drone_dancer:
 
     # adds a move to the drone's queue
     def enqueue_move(self, move_type, duration, frequency = 0.0, delay = 0.0):
-        print('enqueued move number ' + str(move_type) + ' with duration ' + str(duration) + ', frequency ' + str(frequency))
+        print('enqueued move number ' + str(move_type) + ' with duration ' +
+                str(duration) + ', frequency ' + str(frequency))
         self.move_queue.put(self.dance_move(move_type, duration, frequency, delay))
 
     # worker function that reads moves from the move queue and dances accordingly
@@ -209,10 +209,15 @@ class drone_dancer:
 
     # do_move wrapper todo just change do_move to this
     def __do_move(self, dance_move):
-        self.do_move(dance_move.move_type, dance_move.duration, dance_move.frequency, dance_move.delay)
+        self.do_move(
+                dance_move.move_type,
+                dance_move.duration
+                dance_move.frequency,
+                dance_move.delay
+                )
 
-    # bust a move! # todo currently no way to set speed, only duration - you can use ps drone setspeed for now
-    def do_move(self, move_type, duration=1.0, frequency=2.5, delay=0.0):  # todo fix sleep related errors
+    # bust a move!
+    def do_move(self, move_type, duration=1.0, frequency=2.5, delay=0.0):
         self.drone_state = self.drone_states.STATE_DANCING
 
         if delay > 0.0:
