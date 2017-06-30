@@ -1,19 +1,46 @@
 \subsection{Space Confinement}
 
-Since our drone could potentially move in unexpected ways whilst dancing, we confined it to move only in an allowable volume of space. This space is defined vertically by an altitude limit, and horizontally by an area on the ground, marked by roundels
+Since our drone could potentially move in unexpected ways whilst dancing, we confined it to move only in an allowable volume of space. This space is defined vertically by an altitude limit, and horizontally by an area marked by roundels on the ground.
 
 \subsubsection{Vertical Limit}
 
-We have two measures for imposing an altitude limit. The first is an ``absolute" limit where we manually configure the drone's internal altitude limit to (-----FIND EXACT NUMBER----) cm above the ground. Should the drone reach this altitude, the drone will stop moving, land, and end the program, thus preventing the drone from flying into the ceiling. Realistically, we don't want the drone to stop and land in the middle of a dance routine, so we implemented a second ``soft" limit where we continually track altitude by receiving and reading the drone's navigation data, and if the drone reaches an altitude of (-----FIND EXACT NUMBER ----) cm, our program will instruct the drone to move down for a short duration (1s) (SHOULD I FIX THIS IN THE CODE TO 2s????) and then continue to dance from where it should now be in the routine, after accounting for the 1s delay where the drone was moving down (AGAIN, CHANGE??).
+We have two measures for imposing an altitude limit. The first is an ``absolute" limit where we manually configure the drone's internal altitude limit to 3.5m above the ground. Should the drone reach this altitude, the drone will automatically stop moving, land, and end the program, thus preventing the drone from flying into the ceiling. Realistically, we don't want the drone to stop and land in the middle of a dance routine, so we implemented a second ``soft" limit where we continually track altitude by receiving and reading the drone's navigation data, and if the drone reaches an altitude of 2.5m, our program will instruct the drone to move down for a short duration (2s). The drone will then continue to dance from where it should now be in the routine, after accounting for the 2s delay when the drone was moving down.
+
+\textcolor{red}{make sure code reflects these values: altitude limit = 3500, soft limit = 2500, move down duration = 2s}
 
 \subsubsection{Horizontal Limit}
 
-For the horizontal limit, we configured the drone to use the ground-facing camera to detect a roundel target. When a roundel target is detected, the program will take the drone's relative orientation then calculate the necessary x- and y- directions for the drone to move away from the roundel without rotation
+For the horizontal limit, we first laid out a number of roundels on the floor to mark the area above which the drone may fly.
+
+\begin{figure}[H]
+      \centering
+      \includegraphics[width=0.8\linewidth]{3d-roundels-arranged.png}
+      \caption{Example area marked by roundels on the ground}
+\end{figure}
+
+We then configured the drone to use the ground-facing camera so that it can detect the roundel targets. When a roundel target is detected, the program will take the drone's relative orientation then calculate the necessary x- and y-directions for the drone to move away from the roundel without rotation. For example, in the figure below, the blue vector indicates the current velocity of the drone, and is measured against the positive x-axis of the roundel to product an orientation. Then, a transformation is applied to the orientation angle to obtain the x- and y-magnitudes of the desired velocity of the drone, which is labelled as the green vector.
+
+\begin{figure}[H]
+      \centering
+      \includegraphics[width=1\linewidth]{3d-angles.png}
+      \caption{\textit{blue} = current velocity, \textit{green} = desired velocity}
+      \label{fig:3d-angles}
+\end{figure}
+
+The transfer functions to convert $\alpha$ (orientation angle) into x- and y-velocities are:
+
+\begin{equation}
+	x = k\times \cos(\alpha - 90)
+\end{equation}
+
+\begin{equation}
+	y = k\times \sin(\alpha - 90)
+\end{equation}
 
 The ground camera of the AR Drone 2.0 has a 90° field of view.
 
 \begin{figure}[H]
       \centering
       \includegraphics[width=0.8\linewidth]{3d-drone-fov.png}
-      \caption{Roundel detection requirements}
+      \caption{Roundel field of view detection requirement}
 \end{figure}
